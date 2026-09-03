@@ -26,5 +26,5 @@ def health():
 def process_dpr(request: DPRRequest):
     return {
         "received_text": request.text,
-        "message": "DPR received successfully"
+        "message": "Waiting for DPR extractor integration"
     }
