@@ -6,38 +6,18 @@ from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel
 
-
-# --------------------------------------------------
-# 1. FIND PROJECT ROOT AND LOAD .ENV
-# --------------------------------------------------
-
 project_root = Path(__file__).resolve().parents[2]
 
 env_file = project_root / ".env"
 
 load_dotenv(env_file)
 
-
-# --------------------------------------------------
-# 2. GET GEMINI API KEY
-# --------------------------------------------------
-
 api_key = os.getenv("GEMINI_API_KEY")
 
 if not api_key:
     raise ValueError("GEMINI_API_KEY was not found in .env")
 
-
-# --------------------------------------------------
-# 3. CREATE GEMINI CLIENT
-# --------------------------------------------------
-
 client = genai.Client(api_key=api_key)
-
-
-# --------------------------------------------------
-# 4. DEFINE THE OUTPUT STRUCTURE
-# --------------------------------------------------
 
 class DPRData(BaseModel):
     activity_description: Optional[str] = None
@@ -45,11 +25,6 @@ class DPRData(BaseModel):
     status: Optional[str] = None
     tag: Optional[str] = None
     date: Optional[str] = None
-
-
-# --------------------------------------------------
-# 5. DPR EXTRACTION FUNCTION
-# --------------------------------------------------
 
 def extract_dpr(dpr_text):
 
@@ -111,11 +86,6 @@ DPR TEXT:
     )
 
     return DPRData.model_validate_json(interaction.output_text)
-
-
-# --------------------------------------------------
-# 6. TEST THE EXTRACTOR
-# --------------------------------------------------
 
 if __name__ == "__main__":
 
