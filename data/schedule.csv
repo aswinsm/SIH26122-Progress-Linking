@@ -1,0 +1,11 @@
+Activity_ID,Activity_Name,Start_Date,End_Date,Duration_Days
+A001,Site Preparation,2026-09-01,2026-09-05,5
+A002,Excavation Work,2026-09-06,2026-09-12,7
+A003,Foundation Reinforcement,2026-09-13,2026-09-18,6
+A004,Foundation Concreting,2026-09-19,2026-09-22,4
+A005,Column Reinforcement,2026-09-23,2026-09-28,6
+A006,Column Concreting,2026-09-29,2026-10-02,4
+A007,Brick Masonry,2026-10-03,2026-10-12,10
+A008,Plastering Work,2026-10-13,2026-10-20,8
+A009,Electrical Installation,2026-10-21,2026-10-27,7
+A010,Painting Work,2026-10-28,2026-11-03,7
