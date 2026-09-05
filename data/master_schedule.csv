@@ -1,0 +1,301 @@
+activity_id,activity_name,category,planned_start,planned_end,planned_duration_days,predecessor,status,planned_quantity_percent,current_actual_percent,unit,project_id,data_type,source_file
+F01-A022,Structural Retaining Wall Reinforcement - North Section,Structural,2026-08-08,2026-08-17,10,F01-A016,In Progress,100,33,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A028,Site Clearance - Chainage 0-500,Site,2026-08-08,2026-08-16,9,F01-A018,Completed,100,100,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A018,Structural Column Reinforcement - Package 2,Structural,2026-08-10,2026-08-22,13,F01-A010,Completed,100,98,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A019,Structural Slab Formwork - Phase 2,Structural,2026-08-10,2026-08-12,3,F01-A009,In Progress,100,63,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A024,Utility Utility Chamber Construction - Package 3,Utility,2026-08-10,2026-08-14,5,F01-A014,In Progress,100,54,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A010,Safety Pedestrian Diversion - West Section,Safety,2026-08-12,2026-08-13,2,F01-A009,Completed,100,100,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A001,Site Office Setup - Phase 3,Site,2026-08-15,2026-08-26,12,—,Not Started,100,0,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A011,Quality Material Inspection - Phase 3,Quality,2026-08-16,2026-08-28,13,F01-A006,Completed,100,96,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A023,Finishing Plastering - East Section,Finishing,2026-08-16,2026-08-29,14,F01-A013,In Progress,100,82,m²,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A026,Quality Pipeline CCTV Inspection - Zone C,Quality,2026-08-18,2026-08-19,2,F01-A003,In Progress,100,65,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A005,Road Signboard Installation - East Section,Road,2026-08-19,2026-08-19,1,F01-A001,Completed,100,98,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A015,Road Paver Block Installation - Zone C,Road,2026-08-20,2026-08-20,1,F01-A006,Completed,100,98,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A016,Utility Water Pipeline Disinfection - Chainage 0-500,Utility,2026-08-20,2026-09-02,14,F01-A014,In Progress,100,58,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A007,Finishing Waterproofing Membrane - Zone B,Finishing,2026-08-21,2026-08-29,9,F01-A004,Completed,100,100,m²,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A021,Utility Sewer Pipeline Trenching - Package 1,Utility,2026-08-21,2026-08-28,8,F01-A017,Completed,100,99,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A003,Site Welfare Facility Setup - Chainage 500-1000,Site,2026-08-22,2026-08-24,3,F01-A001,Not Started,100,0,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A006,Rehabilitation Concrete Rehabilitation - Zone B,Rehabilitation,2026-08-22,2026-08-23,2,F01-A004,Completed,100,96,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A025,Road Road Marking - West Section,Road,2026-08-23,2026-08-26,4,F01-A002,In Progress,100,64,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A009,Site Demobilization - Zone C,Site,2026-08-25,2026-09-02,9,F01-A007,At Risk,100,32,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A002,Quality Concrete Slump Testing - South Section,Quality,2026-08-26,2026-08-27,2,F01-A001,In Progress,100,32,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A020,Quality Interim Work Inspection - South Section,Quality,2026-08-29,2026-09-09,12,F01-A008,At Risk,100,44,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A008,Rehabilitation Existing Road Resurfacing - Package 3,Rehabilitation,2026-09-01,2026-09-14,14,F01-A001,In Progress,100,40,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A014,Safety Toolbox Talk - North Section,Safety,2026-09-02,2026-09-15,14,F01-A011,In Progress,100,79,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A029,Finishing Exterior Painting - Phase 3,Finishing,2026-09-04,2026-09-13,10,F01-A011,Completed,100,97,m²,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A017,Drainage Pipe Joint Testing - Package 2,Drainage,2026-09-07,2026-09-19,13,F01-A009,In Progress,100,90,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A030,Rehabilitation Existing Road Resurfacing - Phase 1,Rehabilitation,2026-09-09,2026-09-14,6,F01-A002,In Progress,100,64,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A027,Site Mobilization - Package 1,Site,2026-09-12,2026-09-20,9,F01-A012,In Progress,100,56,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A013,Landscaping Lawn Preparation - Zone C,Landscaping,2026-09-13,2026-09-17,5,F01-A010,Completed,100,100,m,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A004,Site Inspection - Zone C,Site,2026-09-14,2026-09-18,5,F01-A001,Not Started,100,0,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F01-A012,Drainage Flow Testing - Zone A,Drainage,2026-09-15,2026-09-18,4,F01-A005,In Progress,100,49,Nos,INFRA-01,synthetic_demo_data,Infrastructure_Schedule_01.xlsx
+F02-A022,Electrical Cable Tray Installation - North Section,Electrical,2026-08-05,2026-08-12,8,F02-A020,In Progress,100,86,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A015,Utility Water Valve Chamber Construction - Chainage 0-500,Utility,2026-08-06,2026-08-18,13,F02-A001,At Risk,100,57,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A020,Site Fencing - Chainage 500-1000,Site,2026-08-07,2026-08-19,13,F02-A009,Not Started,100,0,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A013,Finishing Handrail Installation - Package 1,Finishing,2026-08-08,2026-08-16,9,F02-A002,Completed,100,98,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A014,Structural Steel Structure Erection - Package 3,Structural,2026-08-09,2026-08-12,4,F02-A012,Completed,100,96,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A001,Finishing Metal Railing Installation - Package 3,Finishing,2026-08-10,2026-08-13,4,—,At Risk,100,19,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A028,Structural Beam Formwork - South Section,Structural,2026-08-10,2026-08-10,1,F02-A001,In Progress,100,60,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A002,Earthwork Final Level Preparation - Package 2,Earthwork,2026-08-11,2026-08-23,13,F02-A001,In Progress,100,72,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A017,Electrical Conduit Installation - Package 3,Electrical,2026-08-14,2026-08-16,3,F02-A008,Not Started,100,0,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A005,Electrical Conduit Installation - Chainage 500-1000,Electrical,2026-08-15,2026-08-16,2,F02-A004,In Progress,100,55,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A009,Site Temporary Lighting - South Section,Site,2026-08-19,2026-08-25,7,F02-A006,At Risk,100,64,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A021,Road Dense Bituminous Macadam - Chainage 500-1000,Road,2026-08-20,2026-08-26,7,F02-A001,In Progress,100,44,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A010,Rehabilitation Existing Pavement Milling - Phase 2,Rehabilitation,2026-08-21,2026-08-28,8,F02-A006,In Progress,100,19,m²,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A007,Drainage Trench Excavation - Package 2,Drainage,2026-08-23,2026-08-27,5,F02-A004,In Progress,100,84,m³,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A023,Finishing Plastering - Chainage 0-500,Finishing,2026-08-23,2026-08-25,3,F02-A022,Completed,100,100,m²,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A019,Road Dense Bituminous Macadam - Phase 1,Road,2026-08-25,2026-09-05,12,F02-A006,In Progress,100,43,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A025,Road Kerb Laying - East Section,Road,2026-08-28,2026-09-03,7,F02-A010,Completed,100,96,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A011,Drainage Pipe Laying - Package 2,Drainage,2026-08-29,2026-09-03,6,F02-A008,In Progress,100,73,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A018,Quality Pre-Construction Inspection - Chainage 500-1000,Quality,2026-08-31,2026-08-31,1,F02-A005,In Progress,100,90,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A027,Electrical Earthing Installation - Chainage 0-500,Electrical,2026-09-01,2026-09-06,6,F02-A025,In Progress,100,23,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A024,Drainage Catchpit Construction - Chainage 0-500,Drainage,2026-09-03,2026-09-06,4,F02-A011,In Progress,100,57,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A003,Safety Temporary Shoring Installation - Zone A,Safety,2026-09-07,2026-09-15,9,F02-A002,In Progress,100,84,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A012,Earthwork Excavation - Chainage 500-1000,Earthwork,2026-09-09,2026-09-09,1,F02-A010,Completed,100,96,m³,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A004,Finishing Floor Screed Installation - Chainage 500-1000,Finishing,2026-09-13,2026-09-19,7,F02-A002,In Progress,100,23,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A008,Rehabilitation Pothole Repair - Zone B,Rehabilitation,2026-09-13,2026-09-18,6,F02-A007,Completed,100,97,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A030,Finishing Wall Tile Installation - Zone A,Finishing,2026-09-13,2026-09-18,6,F02-A011,In Progress,100,80,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A006,Drainage RCC Drain Construction - West Section,Drainage,2026-09-17,2026-09-24,8,F02-A005,Not Started,100,0,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A026,Utility Utility Duct Installation - Zone A,Utility,2026-09-17,2026-09-17,1,F02-A009,In Progress,100,44,Nos,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A029,Structural Steel Structure Erection - Chainage 0-500,Structural,2026-09-17,2026-09-29,13,F02-A005,In Progress,100,40,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F02-A016,Utility Water Pipeline Jointing - Zone B,Utility,2026-09-18,2026-09-28,11,F02-A004,Completed,100,99,m,INFRA-02,synthetic_demo_data,Infrastructure_Schedule_02.xlsx
+F03-A002,Demolition Existing Fence Removal - East Section,Demolition,2026-08-10,2026-08-14,5,F03-A001,Completed,100,100,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A027,Finishing Metal Railing Installation - Package 1,Finishing,2026-08-12,2026-08-25,14,F03-A026,Not Started,100,0,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A026,Landscaping Lawn Preparation - Package 1,Landscaping,2026-08-13,2026-08-24,12,F03-A011,At Risk,100,76,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A018,Road Signboard Installation - Zone B,Road,2026-08-16,2026-08-24,9,F03-A011,In Progress,100,72,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A005,Road Paver Block Installation - Zone A,Road,2026-08-21,2026-08-23,3,F03-A001,Completed,100,99,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A030,Foundation Pile Integrity Testing - Zone C,Foundation,2026-08-21,2026-09-03,14,F03-A003,Completed,100,99,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A011,Finishing Masonry Wall Construction - Chainage 500-1000,Finishing,2026-08-22,2026-09-01,11,F03-A001,In Progress,100,71,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A008,Finishing Wall Tile Installation - Package 1,Finishing,2026-08-25,2026-08-30,6,F03-A003,At Risk,100,48,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A029,Quality Material Inspection - Phase 2,Quality,2026-08-25,2026-08-27,3,F03-A001,Completed,100,100,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A022,Quality Workfront Handover Inspection - Phase 2,Quality,2026-08-26,2026-09-05,11,F03-A021,In Progress,100,77,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A020,Road Junction Improvement - North Section,Road,2026-08-27,2026-09-06,11,F03-A017,Not Started,100,0,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A015,Structural Column Formwork - Package 3,Structural,2026-08-29,2026-09-10,13,F03-A009,In Progress,100,20,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A001,Rehabilitation Existing Culvert Rehabilitation - Zone C,Rehabilitation,2026-09-04,2026-09-17,14,—,Not Started,100,0,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A003,Utility Water Pipeline Jointing - Zone A,Utility,2026-09-05,2026-09-11,7,F03-A002,Not Started,100,0,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A006,Road Traffic Island Construction - South Section,Road,2026-09-07,2026-09-15,9,F03-A001,Completed,100,99,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A007,Site Grading - East Section,Site,2026-09-08,2026-09-19,12,F03-A005,Not Started,100,0,m²,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A010,Earthwork Formation Preparation - West Section,Earthwork,2026-09-08,2026-09-16,9,F03-A005,Completed,100,97,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A012,Road Shoulder Construction - Package 2,Road,2026-09-09,2026-09-14,6,F03-A001,Completed,100,99,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A019,Landscaping Shrub Plantation - East Section,Landscaping,2026-09-10,2026-09-12,3,F03-A004,Not Started,100,0,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A017,Finishing Floor Screed Installation - Zone A,Finishing,2026-09-13,2026-09-13,1,F03-A011,In Progress,100,62,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A024,Structural Steel Member Fabrication - Package 1,Structural,2026-09-13,2026-09-25,13,F03-A003,In Progress,100,23,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A025,Rehabilitation Existing Pavement Milling - Package 3,Rehabilitation,2026-09-13,2026-09-14,2,F03-A008,In Progress,100,77,m²,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A028,Site Welfare Facility Setup - South Section,Site,2026-09-14,2026-09-24,11,F03-A008,Not Started,100,0,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A004,Site Material Testing Area Setup - South Section,Site,2026-09-15,2026-09-20,6,F03-A001,In Progress,100,25,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A009,Landscaping Shrub Plantation - North Section,Landscaping,2026-09-16,2026-09-17,2,F03-A001,At Risk,100,44,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A013,Site Office Setup - Package 2,Site,2026-09-16,2026-09-16,1,F03-A008,Not Started,100,0,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A014,Road Median Construction - Package 2,Road,2026-09-16,2026-09-29,14,F03-A001,Completed,100,99,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A021,Finishing External Plaster Finishing - North Section,Finishing,2026-09-17,2026-09-25,9,F03-A003,In Progress,100,41,m²,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A016,Foundation Anchor Bolt Installation - Phase 1,Foundation,2026-09-18,2026-09-24,7,F03-A007,Completed,100,99,Nos,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F03-A023,Foundation Reinforcement - North Section,Foundation,2026-09-18,2026-09-20,3,F03-A013,Completed,100,98,m,INFRA-03,synthetic_demo_data,Infrastructure_Schedule_03.xlsx
+F04-A024,Earthwork Cut and Fill Balancing - Zone A,Earthwork,2026-08-10,2026-08-20,11,F04-A002,Completed,100,98,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A002,Landscaping Irrigation Line Installation - Package 3,Landscaping,2026-08-11,2026-08-11,1,F04-A001,In Progress,100,45,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A014,Drainage Inlet Construction - East Section,Drainage,2026-08-11,2026-08-11,1,F04-A013,Completed,100,99,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A011,Site Mobilization - Phase 2,Site,2026-08-13,2026-08-22,10,F04-A007,Completed,100,99,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A003,Utility Sewer Pipeline Testing - Zone A,Utility,2026-08-16,2026-08-27,12,F04-A002,In Progress,100,28,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A015,Utility Service Restoration - Phase 2,Utility,2026-08-16,2026-08-21,6,F04-A010,Not Started,100,0,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A025,Drainage Headwall Construction - Zone B,Drainage,2026-08-16,2026-08-21,6,F04-A023,In Progress,100,44,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A006,Electrical Generator Cable Connection - Package 2,Electrical,2026-08-18,2026-08-29,12,F04-A005,Completed,100,96,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A029,Rehabilitation Existing Culvert Rehabilitation - East Section,Rehabilitation,2026-08-18,2026-08-27,10,F04-A005,At Risk,100,43,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A021,Electrical Control Panel Installation - Zone C,Electrical,2026-08-22,2026-09-03,13,F04-A011,Not Started,100,0,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A007,Earthwork Formation Preparation - North Section,Earthwork,2026-08-24,2026-09-02,10,F04-A004,In Progress,100,23,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A016,Site Office Setup - Chainage 0-500,Site,2026-08-25,2026-09-02,9,F04-A003,In Progress,100,76,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A020,Rehabilitation Existing Culvert Rehabilitation - Phase 1,Rehabilitation,2026-08-29,2026-09-05,8,F04-A002,Completed,100,97,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A028,Utility Sewer Pipeline Testing - Package 3,Utility,2026-08-29,2026-08-31,3,F04-A002,In Progress,100,46,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A008,Utility Water Line Relocation - North Section,Utility,2026-08-31,2026-09-03,4,F04-A006,In Progress,100,65,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A027,Finishing Blockwork Construction - Package 2,Finishing,2026-08-31,2026-09-06,7,F04-A022,In Progress,100,80,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A018,Drainage Catchpit Construction - South Section,Drainage,2026-09-06,2026-09-14,9,F04-A006,Not Started,100,0,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A030,Finishing Floor Tile Installation - North Section,Finishing,2026-09-06,2026-09-15,10,F04-A026,In Progress,100,29,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A022,Foundation Pile Bore Excavation - Zone C,Foundation,2026-09-09,2026-09-09,1,F04-A020,In Progress,100,44,m³,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A005,Rehabilitation Existing Culvert Rehabilitation - South Section,Rehabilitation,2026-09-10,2026-09-10,1,F04-A001,Completed,100,96,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A010,Road Reflector Installation - Zone C,Road,2026-09-10,2026-09-14,5,F04-A008,At Risk,100,15,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A019,Rehabilitation Existing Culvert Rehabilitation - Zone A,Rehabilitation,2026-09-10,2026-09-15,6,F04-A015,In Progress,100,75,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A017,Rehabilitation Existing Manhole Reconstruction - Zone A,Rehabilitation,2026-09-11,2026-09-14,4,F04-A011,Completed,100,100,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A012,Finishing Final Cleaning - South Section,Finishing,2026-09-14,2026-09-26,13,F04-A007,Not Started,100,0,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A004,Road Kerb Laying - West Section,Road,2026-09-17,2026-09-27,11,F04-A002,In Progress,100,39,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A013,Site Demobilization - East Section,Site,2026-09-17,2026-09-30,14,F04-A005,At Risk,100,45,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A026,Structural Beam Formwork - Zone B,Structural,2026-09-18,2026-09-18,1,F04-A020,In Progress,100,68,m,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A009,Road Reflector Installation - Chainage 500-1000,Road,2026-09-20,2026-09-24,5,F04-A007,Not Started,100,0,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A001,Earthwork Grading - Zone A,Earthwork,2026-09-22,2026-10-04,13,—,At Risk,100,30,m²,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F04-A023,Electrical Insulation Testing - Phase 2,Electrical,2026-09-23,2026-10-06,14,F04-A013,Completed,100,97,Nos,INFRA-04,synthetic_demo_data,Infrastructure_Schedule_04.xlsx
+F05-A022,Landscaping Shrub Plantation - South Section,Landscaping,2026-08-13,2026-08-17,5,F05-A012,At Risk,100,24,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A002,Quality Workfront Handover Inspection - North Section,Quality,2026-08-14,2026-08-27,14,F05-A001,In Progress,100,61,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A014,Road Asphalt Patching - East Section,Road,2026-08-14,2026-08-19,6,F05-A007,In Progress,100,81,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A017,Finishing Final Cleaning - Package 3,Finishing,2026-08-14,2026-08-21,8,F05-A001,In Progress,100,78,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A028,Road Guardrail Installation - Zone C,Road,2026-08-16,2026-08-24,9,F05-A016,In Progress,100,86,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A004,Site Access Road Construction - Zone A,Site,2026-08-21,2026-09-01,12,F05-A003,In Progress,100,44,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A024,Road Reflector Installation - Chainage 0-500,Road,2026-08-21,2026-08-23,3,F05-A021,In Progress,100,58,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A020,Earthwork Haulage - Package 3,Earthwork,2026-08-23,2026-08-26,4,F05-A018,Completed,100,98,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A001,Road Kerb Laying - Zone B,Road,2026-08-24,2026-09-06,14,—,Not Started,100,0,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A007,Rehabilitation Existing Road Resurfacing - East Section,Rehabilitation,2026-08-24,2026-08-27,4,F05-A003,Completed,100,96,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A018,Electrical Feeder Cable Laying - Phase 3,Electrical,2026-08-24,2026-09-04,12,F05-A011,Not Started,100,0,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A006,Quality Pavement Thickness Verification - Package 1,Quality,2026-08-26,2026-09-07,13,F05-A003,In Progress,100,53,m²,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A005,Finishing Metal Railing Installation - East Section,Finishing,2026-08-29,2026-09-10,13,F05-A002,Completed,100,96,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A012,Finishing Road Furniture Painting - East Section,Finishing,2026-08-29,2026-09-11,14,F05-A010,In Progress,100,85,m²,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A016,Road Paver Block Installation - Phase 1,Road,2026-08-29,2026-09-02,5,F05-A010,Completed,100,99,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A015,Quality Material Inspection - Chainage 500-1000,Quality,2026-09-01,2026-09-04,4,F05-A007,In Progress,100,87,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A019,Road Road Marking - Zone A,Road,2026-09-01,2026-09-10,10,F05-A009,In Progress,100,65,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A027,Utility Water Pipeline Trenching - Phase 3,Utility,2026-09-02,2026-09-11,10,F05-A007,In Progress,100,35,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A021,Foundation Pile Bore Excavation - Phase 3,Foundation,2026-09-05,2026-09-17,13,F05-A017,In Progress,100,49,m³,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A029,Foundation Pile Bore Excavation - Package 2,Foundation,2026-09-05,2026-09-06,2,F05-A024,In Progress,100,64,m³,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A008,Foundation Backfilling - Phase 2,Foundation,2026-09-06,2026-09-14,9,F05-A001,In Progress,100,45,m³,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A011,Road Delineator Installation - Phase 1,Road,2026-09-07,2026-09-12,6,F05-A008,Not Started,100,0,Nos,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A023,Road Shoulder Construction - Chainage 0-500,Road,2026-09-12,2026-09-23,12,F05-A016,In Progress,100,90,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A030,Drainage Chamber Waterproofing - Zone C,Drainage,2026-09-15,2026-09-17,3,F05-A016,Not Started,100,0,m²,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A013,Road Kerb Laying - Zone C,Road,2026-09-16,2026-09-18,3,F05-A009,In Progress,100,84,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A009,Structural Column Reinforcement - Phase 2,Structural,2026-09-18,2026-09-22,5,F05-A007,Not Started,100,0,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A010,Finishing Kerb Painting - Chainage 500-1000,Finishing,2026-09-18,2026-09-20,3,F05-A009,In Progress,100,26,m²,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A003,Utility Utility Chamber Construction - Phase 2,Utility,2026-09-23,2026-10-06,14,F05-A001,In Progress,100,37,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A026,Earthwork Excavation - Phase 2,Earthwork,2026-09-23,2026-09-24,2,F05-A005,In Progress,100,29,m³,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F05-A025,Site Temporary Drainage - Package 2,Site,2026-09-25,2026-10-05,11,F05-A005,At Risk,100,27,m,INFRA-05,synthetic_demo_data,Infrastructure_Schedule_05.xlsx
+F06-A030,Landscaping Topsoil Placement - Package 2,Landscaping,2026-08-14,2026-08-21,8,F06-A003,Not Started,100,0,m³,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A009,Earthwork Surplus Soil Disposal - South Section,Earthwork,2026-08-15,2026-08-28,14,F06-A006,In Progress,100,48,m³,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A012,Structural Slab Reinforcement - Chainage 500-1000,Structural,2026-08-17,2026-08-28,12,F06-A001,Completed,100,100,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A020,Structural Retaining Wall Concreting - Chainage 0-500,Structural,2026-08-17,2026-08-18,2,F06-A015,In Progress,100,43,m³,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A005,Site Traffic Access Setup - Package 3,Site,2026-08-21,2026-08-21,1,F06-A003,At Risk,100,84,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A007,Utility Water Pressure Testing - South Section,Utility,2026-08-21,2026-08-28,8,F06-A003,In Progress,100,80,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A001,Quality Weld Inspection - Zone B,Quality,2026-08-23,2026-08-29,7,—,Completed,100,97,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A015,Quality Pipeline CCTV Inspection - Package 3,Quality,2026-08-23,2026-09-01,10,F06-A005,At Risk,100,34,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A023,Rehabilitation Concrete Rehabilitation - Package 1,Rehabilitation,2026-08-24,2026-09-03,11,F06-A005,Completed,100,96,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A011,Structural Slab Formwork - West Section,Structural,2026-08-25,2026-09-07,14,F06-A009,In Progress,100,76,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A025,Earthwork Soil Replacement - Chainage 500-1000,Earthwork,2026-08-26,2026-08-29,4,F06-A014,In Progress,100,37,m³,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A010,Utility Sewer Manhole Construction - North Section,Utility,2026-08-29,2026-09-03,6,F06-A003,In Progress,100,69,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A006,Drainage Manhole Construction - Phase 1,Drainage,2026-08-30,2026-09-08,10,F06-A005,Completed,100,100,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A002,Site Demobilization - Chainage 0-500,Site,2026-09-03,2026-09-16,14,F06-A001,In Progress,100,26,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A016,Safety Traffic Diversion - Phase 3,Safety,2026-09-03,2026-09-15,13,F06-A015,At Risk,100,29,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A014,Demolition Existing Lighting Removal - Chainage 0-500,Demolition,2026-09-04,2026-09-12,9,F06-A012,In Progress,100,85,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A003,Structural Protective Painting - Phase 3,Structural,2026-09-05,2026-09-17,13,F06-A002,Completed,100,99,m²,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A013,Site Clearance - South Section,Site,2026-09-06,2026-09-19,14,F06-A006,Completed,100,96,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A029,Quality Pavement Thickness Verification - South Section,Quality,2026-09-06,2026-09-17,12,F06-A021,In Progress,100,80,m²,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A026,Road Footpath Tile Laying - East Section,Road,2026-09-10,2026-09-16,7,F06-A001,Not Started,100,0,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A019,Site Temporary Lighting - North Section,Site,2026-09-12,2026-09-13,2,F06-A017,In Progress,100,60,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A027,Electrical Feeder Cable Laying - South Section,Electrical,2026-09-12,2026-09-19,8,F06-A017,Completed,100,96,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A022,Structural Expansion Joint Installation - Phase 2,Structural,2026-09-15,2026-09-24,10,F06-A009,At Risk,100,30,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A008,Electrical Streetlight Pole Installation - North Section,Electrical,2026-09-17,2026-09-24,8,F06-A003,Completed,100,98,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A021,Foundation Pedestal Concreting - South Section,Foundation,2026-09-18,2026-09-18,1,F06-A018,In Progress,100,84,m³,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A028,Structural Steel Structure Erection - Zone C,Structural,2026-09-18,2026-09-24,7,F06-A004,Not Started,100,0,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A004,Site Preparation - South Section,Site,2026-09-20,2026-09-22,3,F06-A001,Completed,100,96,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A017,Foundation Formwork - Package 1,Foundation,2026-09-20,2026-09-25,6,F06-A009,Not Started,100,0,m,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A018,Road Signboard Installation - South Section,Road,2026-09-22,2026-10-04,13,F06-A008,Not Started,100,0,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F06-A024,Landscaping Turf Installation - Chainage 500-1000,Landscaping,2026-09-27,2026-10-10,14,F06-A018,In Progress,100,27,Nos,INFRA-06,synthetic_demo_data,Infrastructure_Schedule_06.xlsx
+F07-A020,Site Temporary Power Supply - South Section,Site,2026-08-15,2026-08-17,3,F07-A005,In Progress,100,73,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A022,Road Shoulder Construction - East Section,Road,2026-08-20,2026-08-23,4,F07-A018,Completed,100,98,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A027,Structural Protective Painting - West Section,Structural,2026-08-21,2026-08-26,6,F07-A007,Completed,100,100,m²,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A005,Road Asphalt Patching - Zone C,Road,2026-08-22,2026-08-26,5,F07-A001,Completed,100,97,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A007,Demolition Existing Pavement Removal - Phase 1,Demolition,2026-08-26,2026-09-05,11,F07-A003,Completed,100,97,m²,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A003,Structural Column Reinforcement - Phase 1,Structural,2026-08-27,2026-09-01,6,F07-A002,Not Started,100,0,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A012,Quality Pavement Thickness Verification - Phase 2,Quality,2026-08-29,2026-09-08,11,F07-A001,Completed,100,97,m²,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A023,Landscaping Irrigation Line Installation - East Section,Landscaping,2026-08-29,2026-09-08,11,F07-A007,At Risk,100,58,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A009,Road Thermoplastic Marking - Chainage 500-1000,Road,2026-08-30,2026-09-06,8,F07-A006,In Progress,100,40,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A010,Site Survey - Package 1,Site,2026-08-30,2026-09-05,7,F07-A007,In Progress,100,53,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A014,Finishing Internal Plaster Finishing - West Section,Finishing,2026-09-01,2026-09-11,11,F07-A013,In Progress,100,87,m²,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A028,Quality Aggregate Gradation Testing - Phase 2,Quality,2026-09-01,2026-09-06,6,F07-A018,At Risk,100,74,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A008,Drainage RCC Drain Construction - Phase 3,Drainage,2026-09-04,2026-09-16,13,F07-A002,In Progress,100,33,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A024,Landscaping Lawn Preparation - Chainage 500-1000,Landscaping,2026-09-04,2026-09-10,7,F07-A022,In Progress,100,90,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A006,Foundation Pile Cage Installation - South Section,Foundation,2026-09-05,2026-09-17,13,F07-A002,In Progress,100,69,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A018,Site Temporary Drainage - Chainage 0-500,Site,2026-09-05,2026-09-13,9,F07-A011,In Progress,100,45,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A004,Electrical Panel Functional Testing - West Section,Electrical,2026-09-08,2026-09-19,12,F07-A001,Not Started,100,0,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A015,Road Footpath PCC - Zone A,Road,2026-09-09,2026-09-21,13,F07-A003,Not Started,100,0,m³,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A019,Quality Road Level Survey - Zone A,Quality,2026-09-09,2026-09-11,3,F07-A017,Completed,100,96,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A001,Drainage Manhole Construction - South Section,Drainage,2026-09-10,2026-09-13,4,—,In Progress,100,52,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A011,Structural Beam Concreting - Package 2,Structural,2026-09-10,2026-09-17,8,F07-A007,Not Started,100,0,m³,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A025,Electrical Control Panel Installation - Package 2,Electrical,2026-09-14,2026-09-17,4,F07-A021,Completed,100,96,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A029,Utility Water Pipeline Disinfection - Zone C,Utility,2026-09-15,2026-09-15,1,F07-A004,Completed,100,96,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A030,Road Crash Barrier Installation - North Section,Road,2026-09-15,2026-09-22,8,F07-A029,At Risk,100,54,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A013,Safety Traffic Diversion - Zone A,Safety,2026-09-16,2026-09-27,12,F07-A003,At Risk,100,67,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A016,Utility Sewer Pipeline Trenching - Chainage 500-1000,Utility,2026-09-16,2026-09-27,12,F07-A001,Not Started,100,0,m,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A002,Foundation Anchor Bolt Installation - Phase 2,Foundation,2026-09-17,2026-09-30,14,F07-A001,In Progress,100,17,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A021,Finishing Floor Tile Installation - Zone B,Finishing,2026-09-18,2026-09-23,6,F07-A010,Completed,100,97,Nos,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A026,Structural Protective Painting - Zone C,Structural,2026-09-26,2026-10-05,10,F07-A019,Not Started,100,0,m²,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F07-A017,Drainage Trench Excavation - Chainage 500-1000,Drainage,2026-09-27,2026-10-04,8,F07-A016,At Risk,100,20,m³,INFRA-07,synthetic_demo_data,Infrastructure_Schedule_07.xlsx
+F08-A012,Road Paver Block Installation - North Section,Road,2026-08-18,2026-08-19,2,F08-A002,In Progress,100,70,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A019,Earthwork Soil Replacement - Package 3,Earthwork,2026-08-19,2026-08-31,13,F08-A013,Not Started,100,0,m³,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A024,Quality Workfront Handover Inspection - Package 2,Quality,2026-08-20,2026-08-24,5,F08-A002,Completed,100,98,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A001,Finishing Final Cleaning - Phase 3,Finishing,2026-08-21,2026-08-28,8,—,In Progress,100,29,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A011,Road Delineator Installation - Zone C,Road,2026-08-22,2026-09-01,11,F08-A008,Completed,100,97,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A021,Drainage Chamber Waterproofing - Package 2,Drainage,2026-08-24,2026-09-03,11,F08-A013,Not Started,100,0,m²,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A008,Structural Column Reinforcement - South Section,Structural,2026-08-26,2026-08-31,6,F08-A001,In Progress,100,70,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A015,Drainage Desilting - South Section,Drainage,2026-08-26,2026-08-31,6,F08-A014,In Progress,100,41,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A025,Rehabilitation Concrete Rehabilitation - Package 3,Rehabilitation,2026-08-26,2026-08-29,4,F08-A002,In Progress,100,44,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A029,Site Temporary Lighting - East Section,Site,2026-08-26,2026-08-31,6,F08-A020,Not Started,100,0,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A017,Electrical Panel Functional Testing - North Section,Electrical,2026-08-29,2026-09-09,12,F08-A011,In Progress,100,57,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A006,Road Subgrade Preparation - Phase 3,Road,2026-08-30,2026-09-07,9,F08-A002,In Progress,100,86,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A028,Site Welfare Facility Setup - Zone C,Site,2026-08-31,2026-09-11,12,F08-A024,Completed,100,96,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A004,Structural Beam Formwork - Zone A,Structural,2026-09-02,2026-09-07,6,F08-A001,In Progress,100,80,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A022,Quality Drawing Verification - Phase 3,Quality,2026-09-05,2026-09-17,13,F08-A018,In Progress,100,48,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A023,Foundation Pile Cage Installation - Package 2,Foundation,2026-09-06,2026-09-15,10,F08-A010,In Progress,100,89,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A007,Site Access Road Construction - Phase 3,Site,2026-09-11,2026-09-20,10,F08-A001,At Risk,100,58,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A016,Site Clearance - Phase 2,Site,2026-09-12,2026-09-13,2,F08-A011,In Progress,100,45,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A014,Road Asphalt Patching - Zone A,Road,2026-09-14,2026-09-26,13,F08-A003,At Risk,100,28,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A020,Foundation Pile Bore Excavation - South Section,Foundation,2026-09-14,2026-09-16,3,F08-A007,Not Started,100,0,m³,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A003,Finishing Internal Plaster Finishing - Package 2,Finishing,2026-09-15,2026-09-21,7,F08-A001,Not Started,100,0,m²,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A013,Foundation Pedestal Concreting - Chainage 0-500,Foundation,2026-09-16,2026-09-17,2,F08-A002,Completed,100,96,m³,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A010,Finishing Wall Tile Installation - Phase 2,Finishing,2026-09-17,2026-09-18,2,F08-A008,In Progress,100,73,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A018,Foundation Pile Bore Excavation - North Section,Foundation,2026-09-17,2026-09-21,5,F08-A003,Not Started,100,0,m³,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A005,Demolition Existing Fence Removal - Phase 2,Demolition,2026-09-18,2026-09-22,5,F08-A004,In Progress,100,76,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A027,Structural Beam Concreting - Chainage 0-500,Structural,2026-09-19,2026-09-26,8,F08-A019,Not Started,100,0,m³,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A009,Utility Stormwater Pipeline Laying - North Section,Utility,2026-09-21,2026-09-24,4,F08-A004,Completed,100,98,m,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A026,Electrical Cable Tray Installation - Package 2,Electrical,2026-09-24,2026-10-06,13,F08-A011,Not Started,100,0,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A030,Structural Surface Repair - South Section,Structural,2026-09-26,2026-10-08,13,F08-A015,At Risk,100,63,m²,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F08-A002,Site Security Cabin Setup - East Section,Site,2026-10-01,2026-10-05,5,F08-A001,Completed,100,97,Nos,INFRA-08,synthetic_demo_data,Infrastructure_Schedule_08.xlsx
+F09-A014,Structural Beam Formwork - Chainage 500-1000,Structural,2026-08-21,2026-08-22,2,F09-A006,Not Started,100,0,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A016,Foundation PCC - North Section,Foundation,2026-08-21,2026-09-03,14,F09-A010,In Progress,100,30,m³,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A024,Utility Marker Installation - North Section,Utility,2026-08-21,2026-08-30,10,F09-A016,In Progress,100,47,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A025,Electrical Lightning Protection - Phase 1,Electrical,2026-08-21,2026-09-01,12,F09-A012,At Risk,100,71,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A005,Drainage Outfall Protection - South Section,Drainage,2026-08-24,2026-08-29,6,F09-A002,In Progress,100,87,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A028,Rehabilitation Existing Road Resurfacing - Phase 3,Rehabilitation,2026-08-24,2026-08-29,6,F09-A019,In Progress,100,72,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A002,Electrical Streetlight Luminaire Installation - North Section,Electrical,2026-08-26,2026-09-08,14,F09-A001,Not Started,100,0,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A020,Utility Shifting Coordination - North Section,Utility,2026-08-26,2026-09-08,14,F09-A004,Not Started,100,0,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A009,Structural Structural Bolt Tightening - Phase 2,Structural,2026-08-27,2026-08-31,5,F09-A007,In Progress,100,81,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A019,Road Tack Coat Application - Zone C,Road,2026-08-27,2026-09-04,9,F09-A011,Completed,100,99,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A011,Utility Water Pressure Testing - Zone C,Utility,2026-08-30,2026-09-11,13,F09-A006,Not Started,100,0,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A004,Quality Concrete Slump Testing - Package 2,Quality,2026-09-01,2026-09-10,10,F09-A001,Completed,100,99,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A008,Quality Aggregate Gradation Testing - Zone A,Quality,2026-09-05,2026-09-17,13,F09-A006,Completed,100,99,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A023,Utility Stormwater Pipeline Laying - South Section,Utility,2026-09-06,2026-09-11,6,F09-A019,Not Started,100,0,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A001,Finishing Door Installation - Phase 1,Finishing,2026-09-07,2026-09-18,12,—,In Progress,100,69,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A027,Drainage Culvert Construction - Package 1,Drainage,2026-09-07,2026-09-08,2,F09-A023,In Progress,100,63,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A003,Foundation Excavation - Zone B,Foundation,2026-09-08,2026-09-12,5,F09-A001,In Progress,100,56,m³,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A007,Road Dense Bituminous Macadam - Package 1,Road,2026-09-08,2026-09-19,12,F09-A001,In Progress,100,46,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A010,Road Bituminous Concrete Layer - South Section,Road,2026-09-08,2026-09-08,1,F09-A004,Not Started,100,0,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A029,Structural Retaining Wall Concreting - South Section,Structural,2026-09-10,2026-09-20,11,F09-A027,Completed,100,96,m³,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A006,Electrical Streetlight Luminaire Installation - Chainage 500-1000,Electrical,2026-09-13,2026-09-21,9,F09-A002,In Progress,100,33,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A026,Drainage Culvert Construction - Phase 3,Drainage,2026-09-13,2026-09-14,2,F09-A016,In Progress,100,57,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A012,Foundation Pedestal Formwork - Zone B,Foundation,2026-09-20,2026-09-25,6,F09-A002,Completed,100,96,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A013,Site Security Cabin Setup - Package 1,Site,2026-09-21,2026-10-04,14,F09-A010,Not Started,100,0,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A021,Utility Water Valve Chamber Construction - Package 3,Utility,2026-09-21,2026-09-23,3,F09-A018,Completed,100,96,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A022,Utility Crossing Protection - Zone C,Utility,2026-09-23,2026-10-04,12,F09-A015,In Progress,100,50,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A030,Demolition Existing Kerb Removal - Chainage 500-1000,Demolition,2026-09-24,2026-09-29,6,F09-A029,Completed,100,100,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A017,Earthwork Selected Fill Placement - Phase 1,Earthwork,2026-09-26,2026-09-28,3,F09-A003,In Progress,100,48,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A018,Utility Water Pipeline Laying - North Section,Utility,2026-09-30,2026-10-06,7,F09-A017,In Progress,100,45,m,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F09-A015,Utility Utility Duct Installation - Phase 1,Utility,2026-10-01,2026-10-07,7,F09-A001,In Progress,100,19,Nos,INFRA-09,synthetic_demo_data,Infrastructure_Schedule_09.xlsx
+F10-A009,Structural Steel Structure Erection - Zone B,Structural,2026-08-22,2026-08-22,1,F10-A008,Not Started,100,0,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A012,Utility Service Connection - West Section,Utility,2026-08-23,2026-09-01,10,F10-A009,In Progress,100,73,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A011,Site Security Cabin Setup - Chainage 500-1000,Site,2026-08-24,2026-08-25,2,F10-A003,In Progress,100,18,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A014,Utility Sewer Pipeline Laying - Package 2,Utility,2026-08-24,2026-09-05,13,F10-A007,Completed,100,99,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A007,Quality Final Work Inspection - West Section,Quality,2026-08-25,2026-08-31,7,F10-A003,At Risk,100,38,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A028,Utility Shifting Coordination - Chainage 500-1000,Utility,2026-08-29,2026-08-31,3,F10-A026,In Progress,100,31,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A001,Structural Steel Member Fabrication - East Section,Structural,2026-08-30,2026-09-11,13,—,Not Started,100,0,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A010,Finishing Wall Tile Installation - Zone B,Finishing,2026-09-02,2026-09-15,14,F10-A001,Not Started,100,0,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A013,Demolition Existing Structure Demolition - Phase 1,Demolition,2026-09-02,2026-09-04,3,F10-A001,Completed,100,98,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A017,Quality Pre-Construction Inspection - West Section,Quality,2026-09-02,2026-09-10,9,F10-A008,Not Started,100,0,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A023,Rehabilitation Concrete Rehabilitation - Phase 1,Rehabilitation,2026-09-02,2026-09-07,6,F10-A007,In Progress,100,78,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A019,Road Crash Barrier Installation - Chainage 500-1000,Road,2026-09-03,2026-09-07,5,F10-A005,At Risk,100,64,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A029,Earthwork Surplus Soil Disposal - Phase 2,Earthwork,2026-09-03,2026-09-15,13,F10-A024,In Progress,100,47,m³,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A005,Earthwork Grading - North Section,Earthwork,2026-09-04,2026-09-17,14,F10-A002,In Progress,100,31,m²,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A015,Finishing Sealant Application - Phase 1,Finishing,2026-09-05,2026-09-15,11,F10-A012,In Progress,100,65,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A006,Utility Sewer Pipeline Laying - Package 1,Utility,2026-09-07,2026-09-18,12,F10-A004,In Progress,100,25,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A008,Structural Column Formwork - Package 2,Structural,2026-09-07,2026-09-14,8,F10-A005,In Progress,100,36,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A022,Road Tack Coat Application - Zone B,Road,2026-09-08,2026-09-15,8,F10-A016,In Progress,100,15,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A025,Utility Sewer Line Relocation - Package 3,Utility,2026-09-08,2026-09-15,8,F10-A002,At Risk,100,30,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A002,Rehabilitation Existing Culvert Rehabilitation - Phase 2,Rehabilitation,2026-09-10,2026-09-23,14,F10-A001,Completed,100,97,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A021,Foundation PCC - East Section,Foundation,2026-09-12,2026-09-24,13,F10-A019,In Progress,100,30,m³,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A020,Utility Sewer Line Relocation - Zone C,Utility,2026-09-14,2026-09-22,9,F10-A009,At Risk,100,72,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A027,Drainage Pipe Joint Testing - Phase 1,Drainage,2026-09-15,2026-09-26,12,F10-A003,In Progress,100,85,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A016,Earthwork Final Level Preparation - Phase 3,Earthwork,2026-09-18,2026-09-28,11,F10-A013,In Progress,100,47,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A004,Finishing Waterproofing Membrane - Zone A,Finishing,2026-09-25,2026-09-27,3,F10-A001,Completed,100,96,m²,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A024,Utility Stormwater Pipeline Laying - Phase 2,Utility,2026-09-25,2026-10-03,9,F10-A001,In Progress,100,18,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A030,Utility Sewer Line Relocation - South Section,Utility,2026-09-26,2026-10-02,7,F10-A026,In Progress,100,16,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A026,Drainage Pipe Joint Testing - Zone B,Drainage,2026-09-27,2026-10-07,11,F10-A005,In Progress,100,23,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A003,Finishing Metal Railing Installation - Zone C,Finishing,2026-10-04,2026-10-11,8,F10-A002,Completed,100,96,Nos,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
+F10-A018,Utility Stormwater Pipeline Laying - Zone C,Utility,2026-10-05,2026-10-17,13,F10-A013,In Progress,100,41,m,INFRA-10,synthetic_demo_data,Infrastructure_Schedule_10.xlsx
