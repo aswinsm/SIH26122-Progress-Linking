@@ -3,7 +3,7 @@ from pathlib import Path
 from typing import Optional
 
 from dotenv import load_dotenv
-from google import genai
+from groq import Groq
 from pydantic import BaseModel
 from pypdf import PdfReader
 from openpyxl import load_workbook
@@ -15,16 +15,15 @@ env_file = project_root / ".env"
 
 load_dotenv(env_file)
 
-
-api_key = os.getenv("GEMINI_API_KEY")
+api_key = os.getenv("GROQ_API_KEY")
 
 if not api_key:
-    raise ValueError("GEMINI_API_KEY was not found in .env")
+    raise ValueError("GROQ_API_KEY was not found in .env")
 
-
-client = genai.Client(api_key=api_key)
+client = Groq(api_key=api_key)
 
 class DPRData(BaseModel):
+
     activity_description: Optional[str] = None
     discipline: Optional[str] = None
     status: Optional[str] = None
@@ -69,6 +68,7 @@ def extract_text_from_excel(excel_path):
                     row_values.append(str(cell))
 
             if row_values:
+
                 text += " | ".join(row_values) + "\n"
 
     return text
@@ -89,6 +89,7 @@ The DPR may be:
 - Written as paragraphs
 - Extracted from a PDF
 - Extracted from an Excel spreadsheet
+- Plain text
 
 Understand the meaning of the DPR rather than depending only on
 exact field names.
@@ -114,23 +115,31 @@ IMPORTANT RULES:
 - Preserve line numbers, equipment numbers, foundation numbers,
   structure numbers, or other identifiers when they are clearly
   used as the tag.
-- Use simple status values such as:
-  Completed
-  In Progress
-  Started
-  Delayed
-  Not Started
 
-- If the DPR clearly says:
-  finished, completed, work done, completed successfully
-  then use "Completed".
+Use simple status values such as:
 
-- If the DPR clearly indicates that work is currently happening,
-  use "In Progress".
+Completed
+In Progress
+Started
+Delayed
+Not Started
 
-- Do not confuse progress quantity with status.
+If the DPR clearly says:
 
-- Do not invent information that is not present.
+finished, completed, work done, completed successfully
+
+then use:
+
+Completed
+
+If the DPR clearly indicates that work is currently happening,
+use:
+
+In Progress
+
+Do not confuse progress quantity with status.
+
+Do not invent information that is not present.
 
 
 DPR TEXT:
@@ -138,19 +147,34 @@ DPR TEXT:
 {dpr_text}
 """
 
-    interaction = client.interactions.create(
-        model="gemini-3.8-flash",
-        input=prompt,
+    response = client.chat.completions.create(
+
+        model="openai/gpt-oss-20b",
+
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You extract structured engineering DPR data. "
+                    "Return only valid JSON."
+                )
+            },
+            {
+                "role": "user",
+                "content": prompt
+            }
+        ],
+
         response_format={
-            "type": "text",
-            "mime_type": "application/json",
-            "schema": DPRData.model_json_schema(),
+            "type": "json_object"
         },
+
+        temperature=0
     )
 
-    return DPRData.model_validate_json(
-        interaction.output_text
-    )
+    result = response.choices[0].message.content
+
+    return DPRData.model_validate_json(result)
 
 def extract_dpr_from_file(file_path):
 
@@ -186,12 +210,16 @@ def extract_dpr_from_file(file_path):
 
     return extract_dpr(text)
 
-
 if __name__ == "__main__":
 
-    excel_path = r"data/Infrastructure_Schedule_01.xlsx"
+    excel_path = r"data/sample_DPR.xlsx"
 
-    text = extract_text_from_excel(excel_path)
+    result = extract_dpr_from_file(excel_path)
 
-    print("\nEXTRACTED EXCEL TEXT:")
-    print(text)
+    print("\nDPR EXTRACTION RESULT:")
+
+    print(
+        result.model_dump_json(
+            indent=2
+        )
+    )
