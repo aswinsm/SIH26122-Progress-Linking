@@ -7,3 +7,5 @@ openpyxl
 rapidfuzz
 supabase
 python-dotenv
+groq
+pypdf
