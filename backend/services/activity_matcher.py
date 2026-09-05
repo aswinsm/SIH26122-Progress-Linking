@@ -1,18 +1,21 @@
-import pandas as pd
-import numpy as np
 import re
+from pathlib import Path
 
-from sentence_transformers import SentenceTransformer
+import numpy as np
+import pandas as pd
 from rapidfuzz import fuzz
+from sentence_transformers import SentenceTransformer
 
 
 # ============================================================
-# CONFIGURATION
+# PROJECT PATHS / CONFIGURATION
 # ============================================================
 
-DPR_FILE = "data/dpr.csv"
-SCHEDULE_FILE = "data/master_schedule.csv"
-OUTPUT_FILE = "data/matched_activities.csv"
+PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+MASTER_SCHEDULE_FILE = (
+    PROJECT_ROOT / "data" / "master_schedule.csv"
+)
 
 MODEL_NAME = "all-MiniLM-L6-v2"
 
@@ -22,6 +25,9 @@ MODEL_NAME = "all-MiniLM-L6-v2"
 # ============================================================
 
 def normalize_text(text):
+
+    if text is None:
+        return ""
 
     text = str(text).lower()
 
@@ -34,7 +40,8 @@ def normalize_text(text):
         "cleaning and preparation": "site preparation",
 
         # Excavation
-        "excavation of foundation area": "foundation excavation",
+        "excavation of foundation area":
+            "foundation excavation",
 
         # Reinforcement
         "steel reinforcement work": "reinforcement",
@@ -43,9 +50,12 @@ def normalize_text(text):
         "steel work": "reinforcement",
         "rebar": "reinforcement",
 
-        # Foundation
-        "reinforcement work for foundation": "foundation reinforcement",
-        "reinforcement foundation": "foundation reinforcement",
+        # Foundation reinforcement
+        "reinforcement work for foundation":
+            "foundation reinforcement",
+
+        "reinforcement foundation":
+            "foundation reinforcement",
 
         # Concreting
         "concrete poured": "concreting",
@@ -54,37 +64,73 @@ def normalize_text(text):
         "poured concrete": "concreting",
 
         # Column
-        "column steel fixing": "column reinforcement",
-        "column steel": "column reinforcement",
-        "steel fixing work": "reinforcement",
+        "column steel fixing":
+            "column reinforcement",
+
+        "column steel":
+            "column reinforcement",
 
         # Masonry
-        "brick wall construction": "brick masonry",
-        "brick wall": "brick masonry",
-        "brickwork": "brick masonry",
-        "block wall": "blockwork",
+        "brick wall construction":
+            "brick masonry",
+
+        "brick wall":
+            "brick masonry",
+
+        "brickwork":
+            "brick masonry",
+
+        "block wall":
+            "blockwork",
 
         # Electrical
-        "electrical wiring installation": "electrical installation",
-        "electrical wiring": "electrical installation",
-        "wiring installation": "electrical installation",
+        "electrical wiring installation":
+            "electrical installation",
+
+        "electrical wiring":
+            "electrical installation",
+
+        "wiring installation":
+            "electrical installation",
 
         # Finishing
-        "wall plastering": "plastering",
-        "plastering work": "plastering",
+        "wall plastering":
+            "plastering",
 
-        "building painting": "painting",
-        "painting work": "painting"
+        "plastering work":
+            "plastering",
+
+        "building painting":
+            "painting",
+
+        "painting work":
+            "painting",
+
+        # Piping
+        "spool erected":
+            "pipe erection",
+
+        "spool erection":
+            "pipe erection",
+
+        "pipe spool erection":
+            "pipe erection",
     }
 
     for old, new in replacements.items():
         text = text.replace(old, new)
 
-    # Remove special characters
-    text = re.sub(r"[^a-zA-Z0-9\s]", " ", text)
+    text = re.sub(
+        r"[^a-zA-Z0-9\s]",
+        " ",
+        text
+    )
 
-    # Remove extra spaces
-    text = re.sub(r"\s+", " ", text).strip()
+    text = re.sub(
+        r"\s+",
+        " ",
+        text
+    ).strip()
 
     return text
 
@@ -100,9 +146,7 @@ def detect_category(text):
     categories = {
 
         "site_preparation": [
-            "site preparation",
-            "site cleaning",
-            "site clearing"
+            "site preparation"
         ],
 
         "foundation_excavation": [
@@ -170,7 +214,17 @@ def detect_category(text):
             "electrical",
             "wiring",
             "conduit",
-            "earthing"
+            "earthing",
+            "cable tray",
+            "cable pulling"
+        ],
+
+        "piping": [
+            "pipe erection",
+            "piping",
+            "pipeline",
+            "spool",
+            "welding"
         ],
 
         "painting": [
@@ -189,9 +243,12 @@ def detect_category(text):
         for keyword in keywords:
 
             if keyword in text:
-                score += len(keyword.split())
+                score += len(
+                    keyword.split()
+                )
 
         if score > best_score:
+
             best_score = score
             best_category = category
 
@@ -202,15 +259,17 @@ def detect_category(text):
 # CATEGORY SIMILARITY
 # ============================================================
 
-def category_similarity(dpr_category, schedule_category):
+def category_similarity(
+    dpr_category,
+    schedule_category
+):
 
-    if dpr_category == "unknown":
+    if (
+        dpr_category == "unknown"
+        or schedule_category == "unknown"
+    ):
         return 0.0
 
-    if schedule_category == "unknown":
-        return 0.0
-
-    # Exact category match
     if dpr_category == schedule_category:
         return 1.0
 
@@ -251,10 +310,98 @@ def category_similarity(dpr_category, schedule_category):
         ]
     }
 
-    if dpr_category in related_categories:
+    related = related_categories.get(
+        dpr_category,
+        []
+    )
 
-        if schedule_category in related_categories[dpr_category]:
-            return 0.60
+    if schedule_category in related:
+        return 0.60
+
+    return 0.0
+
+
+# ============================================================
+# HELPER FUNCTIONS
+# ============================================================
+
+def normalize_tag(tag):
+
+    if tag is None:
+        return ""
+
+    return re.sub(
+        r"[^A-Z0-9]",
+        "",
+        str(tag).upper()
+    )
+
+
+def tag_similarity(
+    dpr_tag,
+    schedule_row
+):
+
+    dpr_tag = normalize_tag(
+        dpr_tag
+    )
+
+    if not dpr_tag:
+        return None
+
+    searchable_parts = [
+
+        schedule_row.get(
+            "activity_id",
+            ""
+        ),
+
+        schedule_row.get(
+            "activity_name",
+            ""
+        ),
+
+        schedule_row.get(
+            "wbs",
+            ""
+        ),
+    ]
+
+    searchable_text = normalize_tag(
+        " ".join(
+            str(part)
+            for part in searchable_parts
+        )
+    )
+
+    if dpr_tag in searchable_text:
+        return 100.0
+
+    return 0.0
+
+
+def discipline_similarity(
+    dpr_discipline,
+    schedule_discipline
+):
+
+    if not dpr_discipline:
+        return None
+
+    if not schedule_discipline:
+        return None
+
+    if (
+        str(dpr_discipline)
+        .strip()
+        .lower()
+        ==
+        str(schedule_discipline)
+        .strip()
+        .lower()
+    ):
+
+        return 100.0
 
     return 0.0
 
@@ -263,276 +410,226 @@ def category_similarity(dpr_category, schedule_category):
 # MATCH STATUS
 # ============================================================
 
-def get_status(confidence, confidence_gap):
+def get_status(
+    confidence,
+    confidence_gap
+):
 
-    if confidence >= 75 and confidence_gap >= 3:
+    if (
+        confidence >= 75
+        and confidence_gap >= 3
+    ):
+
         return "MATCHED"
 
-    elif confidence >= 60:
+    if confidence >= 55:
+
         return "REVIEW"
 
-    elif confidence >= 50 and confidence_gap >= 3:
-        return "REVIEW"
-
-    else:
-        return "UNMATCHED"
+    return "UNMATCHED"
 
 
 # ============================================================
-# MAIN PROGRAM
+# ACTIVITY MATCHER
 # ============================================================
 
-def main():
+class ActivityMatcher:
 
-    print("\n========== AI ACTIVITY MATCHER ==========\n")
+    def __init__(
+        self,
+        schedule_file=MASTER_SCHEDULE_FILE
+    ):
 
-
-    # --------------------------------------------------------
-    # LOAD DPR DATA
-    # --------------------------------------------------------
-
-    print("Loading DPR data...")
-
-    dpr_data = pd.read_csv(DPR_FILE)
-
-    print(f"Loaded DPR records: {len(dpr_data)}")
-
-
-    # --------------------------------------------------------
-    # LOAD SCHEDULE DATA
-    # --------------------------------------------------------
-
-    print("Loading schedule data...")
-
-    schedule_data = pd.read_csv(SCHEDULE_FILE)
-
-    print(f"Loaded schedule activities: {len(schedule_data)}")
-
-
-    # --------------------------------------------------------
-    # FIND DPR ACTIVITY COLUMN
-    # --------------------------------------------------------
-
-    possible_columns = [
-
-        "Reported_Activity",
-        "reported_activity",
-        "activity",
-        "Activity",
-        "activity_name"
-    ]
-
-    dpr_activity_column = None
-
-    for column in possible_columns:
-
-        if column in dpr_data.columns:
-
-            dpr_activity_column = column
-            break
-
-
-    if dpr_activity_column is None:
-
-        print("\nERROR!")
-
-        print(
-            "Could not find the DPR activity column."
+        self.schedule_file = Path(
+            schedule_file
         )
 
-        print(
-            f"Available columns: {dpr_data.columns.tolist()}"
+        if not self.schedule_file.exists():
+
+            raise FileNotFoundError(
+                "Master schedule was not found at: "
+                f"{self.schedule_file}"
+            )
+
+        self.schedule_data = pd.read_csv(
+            self.schedule_file
         )
 
-        return
+        if "activity_name" not in (
+            self.schedule_data.columns
+        ):
 
+            raise ValueError(
+                "Master schedule must contain "
+                "'activity_name'."
+            )
 
-    print(
-        f"DPR Activity Column: {dpr_activity_column}"
-    )
-
-
-    # --------------------------------------------------------
-    # VALIDATE SCHEDULE DATA
-    # --------------------------------------------------------
-
-    if "activity_name" not in schedule_data.columns:
-
-        print("\nERROR!")
-
-        print(
-            "Schedule file does not contain activity_name."
+        self.schedule_data = (
+            self.schedule_data
+            .dropna(
+                subset=[
+                    "activity_name"
+                ]
+            )
+            .reset_index(
+                drop=True
+            )
         )
 
-        print(
-            f"Available columns: "
-            f"{schedule_data.columns.tolist()}"
-        )
+        # Ensure useful optional fields exist
+        for column in [
+            "activity_id",
+            "discipline",
+            "project_id",
+            "category",
+            "wbs"
+        ]:
 
-        return
+            if (
+                column
+                not in self.schedule_data.columns
+            ):
 
+                self.schedule_data[
+                    column
+                ] = ""
 
-    # Remove empty activities
-    schedule_data = schedule_data.dropna(
-        subset=["activity_name"]
-    ).copy()
-
-    # Reset index to avoid indexing problems
-    schedule_data = schedule_data.reset_index(
-        drop=True
-    )
-
-
-    # --------------------------------------------------------
-    # NORMALIZE SCHEDULE ACTIVITIES
-    # --------------------------------------------------------
-
-    print("\nPreparing schedule activities...")
-
-    schedule_data["normalized_activity"] = (
-
-        schedule_data["activity_name"]
-        .apply(normalize_text)
-    )
-
-    schedule_data["detected_category"] = (
-
-        schedule_data["activity_name"]
-        .apply(detect_category)
-    )
-
-
-    # --------------------------------------------------------
-    # LOAD AI MODEL
-    # --------------------------------------------------------
-
-    print("\nLoading AI semantic model...")
-
-    model = SentenceTransformer(MODEL_NAME)
-
-    print("AI model loaded successfully!")
-
-
-    # --------------------------------------------------------
-    # CREATE SCHEDULE EMBEDDINGS
-    # --------------------------------------------------------
-
-    print("\nCreating schedule embeddings...")
-
-    schedule_embeddings = model.encode(
-
-        schedule_data[
+        self.schedule_data[
             "normalized_activity"
-        ].tolist(),
+        ] = (
 
-        convert_to_numpy=True,
+            self.schedule_data[
+                "activity_name"
+            ]
+            .apply(
+                normalize_text
+            )
+        )
 
-        normalize_embeddings=True,
+        self.schedule_data[
+            "detected_category"
+        ] = (
 
-        show_progress_bar=True
-    )
+            self.schedule_data[
+                "activity_name"
+            ]
+            .apply(
+                detect_category
+            )
+        )
 
-    print("Schedule embeddings created!")
+        print(
+            "Loading semantic matching model..."
+        )
 
+        self.model = SentenceTransformer(
+            MODEL_NAME
+        )
 
-    # --------------------------------------------------------
-    # RESULTS STORAGE
-    # --------------------------------------------------------
+        print(
+            "Creating schedule embeddings..."
+        )
 
-    matched_results = []
+        self.schedule_embeddings = (
+            self.model.encode(
 
-    matched_count = 0
-    review_count = 0
-    unmatched_count = 0
+                self.schedule_data[
+                    "normalized_activity"
+                ].tolist(),
 
+                convert_to_numpy=True,
 
-    print(
-        "\n========== MATCHING RESULTS ==========\n"
-    )
+                normalize_embeddings=True
+            )
+        )
 
-
-    # --------------------------------------------------------
-    # PROCESS EACH DPR ACTIVITY
-    # --------------------------------------------------------
-
-    for _, dpr_row in dpr_data.iterrows():
-
-        dpr_activity = str(
-            dpr_row[dpr_activity_column]
+        print(
+            "Activity matcher ready."
         )
 
 
-        # ----------------------------------------------------
-        # NORMALIZE DPR ACTIVITY
-        # ----------------------------------------------------
+    # ========================================================
+    # MATCH ONE DPR ACTIVITY
+    # ========================================================
+
+    def match_activity(
+        self,
+        activity_description,
+        discipline=None,
+        tag=None,
+        top_k=3
+    ):
+
+        if (
+            not activity_description
+            or not str(
+                activity_description
+            ).strip()
+        ):
+
+            raise ValueError(
+                "activity_description "
+                "cannot be empty."
+            )
 
         normalized_dpr = normalize_text(
-            dpr_activity
+            activity_description
         )
 
         dpr_category = detect_category(
-            dpr_activity
+            activity_description
         )
 
+        dpr_embedding = (
+            self.model.encode(
 
-        # ----------------------------------------------------
-        # CREATE DPR EMBEDDING
-        # ----------------------------------------------------
+                normalized_dpr,
 
-        dpr_embedding = model.encode(
+                convert_to_numpy=True,
 
-            normalized_dpr,
-
-            convert_to_numpy=True,
-
-            normalize_embeddings=True
+                normalize_embeddings=True
+            )
         )
-
-
-        # ----------------------------------------------------
-        # SEMANTIC SIMILARITY
-        # ----------------------------------------------------
 
         semantic_scores = np.dot(
 
-            schedule_embeddings,
+            self.schedule_embeddings,
 
             dpr_embedding
         )
 
-
-        # ----------------------------------------------------
-        # CALCULATE ALL MATCH SCORES
-        # ----------------------------------------------------
-
         results = []
 
 
-        for position in range(len(schedule_data)):
-
-            schedule_row = schedule_data.iloc[
-                position
-            ]
-
-
-            # Semantic similarity
-            semantic_score = float(
-                semantic_scores[position] * 100
+        for position in range(
+            len(
+                self.schedule_data
             )
+        ):
 
-
-            # Fuzzy similarity
-            fuzzy_score = fuzz.token_set_ratio(
-
-                normalized_dpr,
-
-                schedule_row[
-                    "normalized_activity"
+            schedule_row = (
+                self.schedule_data.iloc[
+                    position
                 ]
             )
 
+            semantic_score = float(
+                semantic_scores[
+                    position
+                ] * 100
+            )
 
-            # Category similarity
+            fuzzy_score = (
+                fuzz.token_set_ratio(
+
+                    normalized_dpr,
+
+                    schedule_row[
+                        "normalized_activity"
+                    ]
+                )
+            )
+
             category_score = (
 
                 category_similarity(
@@ -542,437 +639,287 @@ def main():
                     schedule_row[
                         "detected_category"
                     ]
-
                 )
 
                 * 100
             )
 
-
-            # ------------------------------------------------
-            # HYBRID SCORE
-            # ------------------------------------------------
-
-            hybrid_score = (
-
-                semantic_score * 0.60
-
-                +
-
-                fuzzy_score * 0.25
-
-                +
-
-                category_score * 0.15
+            tag_score = (
+                tag_similarity(
+                    tag,
+                    schedule_row
+                )
             )
+
+            discipline_score = (
+                discipline_similarity(
+
+                    discipline,
+
+                    schedule_row.get(
+                        "discipline",
+                        ""
+                    )
+                )
+            )
+
+
+            # -----------------------------------------------
+            # DYNAMIC WEIGHTING
+            # -----------------------------------------------
+
+            scores = [
+
+                (
+                    semantic_score,
+                    0.50
+                ),
+
+                (
+                    fuzzy_score,
+                    0.25
+                ),
+
+                (
+                    category_score,
+                    0.10
+                )
+            ]
+
+
+            if tag_score is not None:
+
+                scores.append(
+                    (
+                        tag_score,
+                        0.10
+                    )
+                )
+
+
+            if (
+                discipline_score
+                is not None
+            ):
+
+                scores.append(
+                    (
+                        discipline_score,
+                        0.05
+                    )
+                )
+
+
+            total_weight = sum(
+                weight
+                for _, weight
+                in scores
+            )
+
+
+            hybrid_score = sum(
+
+                score * weight
+                for score, weight
+                in scores
+
+            ) / total_weight
 
 
             results.append({
 
-                "activity_name":
-
-                    schedule_row[
-                        "activity_name"
-                    ],
-
-
                 "activity_id":
-
                     schedule_row.get(
                         "activity_id",
                         ""
                     ),
 
+                "activity_name":
+                    schedule_row[
+                        "activity_name"
+                    ],
+
+                "discipline":
+                    schedule_row.get(
+                        "discipline",
+                        ""
+                    ),
 
                 "project_id":
-
                     schedule_row.get(
                         "project_id",
                         ""
                     ),
 
-
-                "schedule_category":
-
+                "wbs":
                     schedule_row.get(
-                        "category",
+                        "wbs",
                         ""
                     ),
 
-
-                "detected_category":
-
-                    schedule_row[
-                        "detected_category"
-                    ],
-
-
                 "semantic_score":
-
-                    semantic_score,
-
+                    round(
+                        semantic_score,
+                        2
+                    ),
 
                 "fuzzy_score":
-
-                    fuzzy_score,
-
+                    round(
+                        fuzzy_score,
+                        2
+                    ),
 
                 "category_score":
+                    round(
+                        category_score,
+                        2
+                    ),
 
-                    category_score,
+                "tag_score":
+                    (
+                        round(
+                            tag_score,
+                            2
+                        )
+                        if tag_score
+                        is not None
+                        else None
+                    ),
 
+                "discipline_score":
+                    (
+                        round(
+                            discipline_score,
+                            2
+                        )
+                        if discipline_score
+                        is not None
+                        else None
+                    ),
 
-                "hybrid_score":
-
-                    hybrid_score
+                "confidence":
+                    round(
+                        hybrid_score,
+                        2
+                    )
             })
 
-
-        # ----------------------------------------------------
-        # SORT RESULTS
-        # ----------------------------------------------------
 
         results.sort(
 
             key=lambda item:
-            item["hybrid_score"],
+            item["confidence"],
 
             reverse=True
         )
 
 
-        # ----------------------------------------------------
-        # BEST MATCH
-        # ----------------------------------------------------
-
-        best_match = results[0]
-
-        second_match = results[1]
-
-
-        confidence = best_match[
-            "hybrid_score"
+        top_results = results[
+            :top_k
         ]
 
 
-        confidence_gap = (
+        if not top_results:
 
-            best_match[
-                "hybrid_score"
+            return {
+                "status":
+                    "UNMATCHED",
+
+                "confidence":
+                    0,
+
+                "confidence_gap":
+                    0,
+
+                "matches":
+                    []
+            }
+
+
+        best_score = (
+            top_results[0][
+                "confidence"
             ]
+        )
 
+
+        if len(
+            top_results
+        ) > 1:
+
+            second_score = (
+                top_results[1][
+                    "confidence"
+                ]
+            )
+
+        else:
+
+            second_score = 0
+
+
+        confidence_gap = round(
+
+            best_score
             -
+            second_score,
 
-            second_match[
-                "hybrid_score"
-            ]
+            2
         )
 
 
         status = get_status(
 
-            confidence,
+            best_score,
 
             confidence_gap
         )
 
 
-        # ----------------------------------------------------
-        # PRINT RESULTS
-        # ----------------------------------------------------
-
-        print(
-            f"DPR Activity: {dpr_activity}"
-        )
-
-
-        print(
-            f"Normalized: {normalized_dpr}"
-        )
-
-
-        print(
-            f"Detected Category: {dpr_category}"
-        )
-
-
-        print("\nTop 3 AI Matches:")
-
-
-        for rank, result in enumerate(
-            results[:3],
-            start=1
-        ):
-
-            print(
-
-                f"{rank}. "
-
-                f"{result['activity_name']} "
-
-                f"[{result['project_id']}]"
-            )
-
-
-            print(
-
-                f"   Semantic: "
-
-                f"{result['semantic_score']:.2f}% "
-
-                f"| Fuzzy: "
-
-                f"{result['fuzzy_score']:.2f}% "
-
-                f"| Category: "
-
-                f"{result['category_score']:.2f}% "
-
-                f"| Hybrid: "
-
-                f"{result['hybrid_score']:.2f}%"
-            )
-
-
-        print(
-            f"\nFinal Match: "
-            f"{best_match['activity_name']}"
-        )
-
-
-        print(
-            f"Activity ID: "
-            f"{best_match['activity_id']}"
-        )
-
-
-        print(
-            f"Project ID: "
-            f"{best_match['project_id']}"
-        )
-
-
-        print(
-            f"Confidence: "
-            f"{confidence:.2f}%"
-        )
-
-
-        print(
-            f"Confidence Gap: "
-            f"{confidence_gap:.2f}%"
-        )
-
-
-        print(
-            f"Status: {status}"
-        )
-
-
-        print("-" * 65)
-
-
-        # ----------------------------------------------------
-        # COUNT RESULTS
-        # ----------------------------------------------------
-
-        if status == "MATCHED":
-
-            matched_count += 1
-
-
-        elif status == "REVIEW":
-
-            review_count += 1
-
-
-        else:
-
-            unmatched_count += 1
-
-
-        # ----------------------------------------------------
-        # CREATE OUTPUT RECORD
-        # ----------------------------------------------------
-
-        result_record = {
-
-            "dpr_activity":
-
-                dpr_activity,
-
-
-            "normalized_activity":
-
-                normalized_dpr,
-
-
-            "detected_dpr_category":
-
-                dpr_category,
-
-
-            "matched_activity":
-
-                best_match[
-                    "activity_name"
-                ],
-
-
-            "activity_id":
-
-                best_match[
-                    "activity_id"
-                ],
-
-
-            "project_id":
-
-                best_match[
-                    "project_id"
-                ],
-
-
-            "schedule_category":
-
-                best_match[
-                    "schedule_category"
-                ],
-
-
-            "semantic_score":
-
-                round(
-
-                    best_match[
-                        "semantic_score"
-                    ],
-
-                    2
-                ),
-
-
-            "fuzzy_score":
-
-                round(
-
-                    best_match[
-                        "fuzzy_score"
-                    ],
-
-                    2
-                ),
-
-
-            "category_score":
-
-                round(
-
-                    best_match[
-                        "category_score"
-                    ],
-
-                    2
-                ),
-
-
-            "confidence":
-
-                round(
-
-                    confidence,
-
-                    2
-                ),
-
-
-            "confidence_gap":
-
-                round(
-
-                    confidence_gap,
-
-                    2
-                ),
-
+        return {
 
             "status":
+                status,
 
-                status
+            "confidence":
+                best_score,
+
+            "confidence_gap":
+                confidence_gap,
+
+            "detected_category":
+                dpr_category,
+
+            "matches":
+                top_results
         }
 
 
-        # ----------------------------------------------------
-        # ADD ORIGINAL DPR DATA
-        # ----------------------------------------------------
-
-        for column in dpr_data.columns:
-
-            result_record[
-                f"dpr_{column}"
-            ] = dpr_row[column]
-
-
-        matched_results.append(
-            result_record
-        )
-
-
-    # --------------------------------------------------------
-    # SAVE RESULTS
-    # --------------------------------------------------------
-
-    results_df = pd.DataFrame(
-        matched_results
-    )
-
-
-    results_df.to_csv(
-
-        OUTPUT_FILE,
-
-        index=False
-    )
-
-
-    # --------------------------------------------------------
-    # FINAL SUMMARY
-    # --------------------------------------------------------
-
-    print(
-        "\n========== MATCHING COMPLETE ==========\n"
-    )
-
-
-    print(
-        f"Total DPR Activities: {len(results_df)}"
-    )
-
-
-    print(
-        f"Matched: {matched_count}"
-    )
-
-
-    print(
-        f"Review Required: {review_count}"
-    )
-
-
-    print(
-        f"Unmatched: {unmatched_count}"
-    )
-
-
-    print(
-        f"\nResults saved to:\n{OUTPUT_FILE}"
-    )
-
-
 # ============================================================
-# RUN PROGRAM
+# LOCAL TEST
 # ============================================================
 
 if __name__ == "__main__":
 
-    main()
+    matcher = ActivityMatcher()
+
+    result = matcher.match_activity(
+
+        activity_description=
+            "F101 concreting",
+
+        discipline=
+            "Civil",
+
+        tag=
+            "F101"
+    )
+
+    import json
+
+    print(
+        json.dumps(
+            result,
+            indent=2
+        )
+    )
