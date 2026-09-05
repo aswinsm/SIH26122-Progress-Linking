@@ -5,6 +5,7 @@ from typing import Optional
 from dotenv import load_dotenv
 from google import genai
 from pydantic import BaseModel
+from pypdf import PdfReader
 
 project_root = Path(__file__).resolve().parents[2]
 
@@ -25,6 +26,16 @@ class DPRData(BaseModel):
     status: Optional[str] = None
     tag: Optional[str] = None
     date: Optional[str] = None
+
+def extract_text_from_pdf(pdf_path):
+    reader=PdfReader(pdf_path)
+    text=""
+    for page in reader.pages:
+        page_text=page.extract_text()
+        if page_text:
+            text+=page_text + "\n"
+
+        return text
 
 def extract_dpr(dpr_text):
 
@@ -109,4 +120,14 @@ if __name__ == "__main__":
 
     print("\nDPR EXTRACTION RESULT:")
     print(result.model_dump_json(indent=2)) 
-    # sample commit
+
+   
+if __name__ == "__main__":
+
+    pdf_path = r"data/sample_DPR.pdf"
+
+    text = extract_text_from_pdf(pdf_path)
+
+    print("\nEXTRACTED PDF TEXT:")
+    print(text)
+   
