@@ -27,6 +27,11 @@ def clean_value(value):
     if pd.isna(value):
         return None
 
+    value = str(value).strip()
+
+    if not value:
+        return None
+
     return value
 
 
@@ -50,6 +55,282 @@ def clean_date(value):
     except Exception:
 
         return None
+
+
+# ============================================================
+# DISCIPLINE INFERENCE
+# ============================================================
+
+def infer_discipline(row):
+
+    # --------------------------------------------------------
+    # USE EXISTING DISCIPLINE FIRST
+    # --------------------------------------------------------
+
+    existing = clean_value(
+        row.get("discipline")
+    )
+
+    if existing:
+
+        return existing
+
+
+    # --------------------------------------------------------
+    # COMBINE AVAILABLE TEXT
+    # --------------------------------------------------------
+
+    text_parts = [
+        row.get("activity_name"),
+        row.get("category"),
+        row.get("wbs"),
+    ]
+
+
+    text = " ".join(
+
+        str(value)
+
+        for value in text_parts
+
+        if value is not None
+        and not pd.isna(value)
+
+    ).lower()
+
+
+    # ========================================================
+    # ELECTRICAL
+    # ========================================================
+
+    electrical_keywords = [
+
+        "electrical",
+        "cable",
+        "cabling",
+        "cable tray",
+        "lighting",
+        "light fixture",
+        "transformer",
+        "switchgear",
+        "panel board",
+        "distribution board",
+        "db installation",
+        "earthing",
+        "grounding",
+        "power supply",
+        "electrical panel",
+        "electrical testing",
+        "motor control",
+        "mcc",
+        "ups",
+        "generator electrical",
+    ]
+
+
+    if any(
+        keyword in text
+        for keyword in electrical_keywords
+    ):
+
+        return "Electrical"
+
+
+    # ========================================================
+    # INSTRUMENTATION
+    # ========================================================
+
+    instrumentation_keywords = [
+
+        "instrumentation",
+        "instrument",
+        "sensor",
+        "transmitter",
+        "control valve",
+        "flow meter",
+        "pressure gauge",
+        "temperature gauge",
+        "calibration",
+        "loop checking",
+        "loop test",
+        "plc",
+        "scada",
+        "control system",
+        "junction box",
+        "instrument cable",
+    ]
+
+
+    if any(
+        keyword in text
+        for keyword in instrumentation_keywords
+    ):
+
+        return "Instrumentation"
+
+
+    # ========================================================
+    # PIPING
+    # ========================================================
+
+    piping_keywords = [
+
+        "piping",
+        "pipe",
+        "pipeline",
+        "pipe rack",
+        "pipe support",
+        "pipe spool",
+        "spool",
+        "welding",
+        "hydrotest",
+        "hydro test",
+        "flange",
+        "valve installation",
+        "pipe installation",
+        "pipeline installation",
+        "pipe fabrication",
+        "pipe erection",
+    ]
+
+
+    if any(
+        keyword in text
+        for keyword in piping_keywords
+    ):
+
+        return "Piping"
+
+
+    # ========================================================
+    # MECHANICAL
+    # ========================================================
+
+    mechanical_keywords = [
+
+        "mechanical",
+        "equipment",
+        "pump",
+        "compressor",
+        "turbine",
+        "motor installation",
+        "machine",
+        "machinery",
+        "hvac",
+        "duct",
+        "ducting",
+        "fan",
+        "blower",
+        "chiller",
+        "boiler",
+        "tank installation",
+        "vessel",
+        "equipment erection",
+        "equipment installation",
+        "alignment",
+    ]
+
+
+    if any(
+        keyword in text
+        for keyword in mechanical_keywords
+    ):
+
+        return "Mechanical"
+
+
+    # ========================================================
+    # HSE
+    # ========================================================
+
+    hse_keywords = [
+
+        "hse",
+        "safety",
+        "health and safety",
+        "toolbox talk",
+        "safety inspection",
+        "safety audit",
+        "permit to work",
+        "fire safety",
+        "ppe",
+        "environmental",
+        "environment inspection",
+        "safety training",
+    ]
+
+
+    if any(
+        keyword in text
+        for keyword in hse_keywords
+    ):
+
+        return "HSE"
+
+
+    # ========================================================
+    # CIVIL
+    # ========================================================
+
+    civil_keywords = [
+
+        "civil",
+        "excavation",
+        "foundation",
+        "concrete",
+        "concreting",
+        "reinforcement",
+        "rebar",
+        "formwork",
+        "shuttering",
+        "slab",
+        "column",
+        "beam",
+        "footing",
+        "pedestal",
+        "retaining wall",
+        "wall",
+        "brickwork",
+        "masonry",
+        "plaster",
+        "road",
+        "roadwork",
+        "resurfacing",
+        "pavement",
+        "drain",
+        "drainage",
+        "culvert",
+        "earthwork",
+        "grading",
+        "backfilling",
+        "backfill",
+        "waterproofing",
+        "structural",
+        "steel reinforcement",
+        "building",
+        "site development",
+        "survey",
+        "surveying",
+        "soil",
+        "compaction",
+        "pile",
+        "piling",
+    ]
+
+
+    if any(
+        keyword in text
+        for keyword in civil_keywords
+    ):
+
+        return "Civil"
+
+
+    # ========================================================
+    # FALLBACK
+    # ========================================================
+
+    return "General"
 
 
 # ============================================================
@@ -136,6 +417,11 @@ def sync_schedule():
 
     for _, row in schedule.iterrows():
 
+        discipline = infer_discipline(
+            row
+        )
+
+
         record = {
 
             "activity_id":
@@ -149,11 +435,7 @@ def sync_schedule():
                 ).strip(),
 
             "discipline":
-                clean_value(
-                    row.get(
-                        "discipline"
-                    )
-                ),
+                discipline,
 
             "wbs":
                 clean_value(
@@ -198,7 +480,45 @@ def sync_schedule():
 
 
     # --------------------------------------------------------
-    # REMOVE CURRENT SAMPLE DATA
+    # DISCIPLINE SUMMARY
+    # --------------------------------------------------------
+
+    discipline_counts = {}
+
+
+    for record in records:
+
+        discipline = record[
+            "discipline"
+        ]
+
+        discipline_counts[
+            discipline
+        ] = (
+            discipline_counts.get(
+                discipline,
+                0
+            )
+            + 1
+        )
+
+
+    print(
+        "\nDiscipline classification:"
+    )
+
+
+    for discipline, count in sorted(
+        discipline_counts.items()
+    ):
+
+        print(
+            f"{discipline}: {count}"
+        )
+
+
+    # --------------------------------------------------------
+    # CLEAR EXISTING SCHEDULE
     # --------------------------------------------------------
 
     print(

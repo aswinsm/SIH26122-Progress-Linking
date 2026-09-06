@@ -14,7 +14,9 @@ from backend.services.dpr_extractor import (
     extract_text_from_pdf,
 )
 
-from backend.services.activity_matcher import ActivityMatcher
+from backend.services.activity_matcher import (
+    ActivityMatcher,
+)
 
 from backend.services.voice_processor import (
     transcribe_audio,
@@ -34,6 +36,8 @@ from backend.services.database import (
     reject_activity_match,
     change_activity_match,
     get_schedule_activities,
+    get_latest_processing_result,
+    clear_all_entered_data,
 )
 
 
@@ -43,7 +47,7 @@ from backend.services.database import (
 
 app = FastAPI(
     title="SIH26122 Progress Linking API",
-    version="0.6.0"
+    version="0.8.0"
 )
 
 
@@ -75,6 +79,8 @@ class ChangeMatchRequest(BaseModel):
 # ACTIVITY MATCHER
 # ============================================================
 
+# Load schedule + embeddings only once
+# when FastAPI starts.
 matcher = ActivityMatcher()
 
 
@@ -82,27 +88,48 @@ matcher = ActivityMatcher()
 # MATCHING HELPER
 # ============================================================
 
-def match_extracted_activities(extraction):
+def match_extracted_activities(
+    extraction
+):
 
     processed_activities = []
 
+
     for activity in extraction.activities:
 
-        # Skip unusable extraction
         if not activity.activity_description:
             continue
 
-        match_result = matcher.match_activity(
-            activity_description=activity.activity_description,
-            discipline=activity.discipline,
-            tag=activity.tag,
-            top_k=3
+
+        match_result = (
+            matcher.match_activity(
+
+                activity_description=(
+                    activity.activity_description
+                ),
+
+                discipline=(
+                    activity.discipline
+                ),
+
+                tag=(
+                    activity.tag
+                ),
+
+                top_k=3
+            )
         )
 
+
         processed_activities.append({
-            "extracted_activity": activity.model_dump(),
-            "matching": match_result
+
+            "extracted_activity":
+                activity.model_dump(),
+
+            "matching":
+                match_result
         })
+
 
     return processed_activities
 
@@ -118,10 +145,11 @@ def save_processing_result(
 ):
 
     # --------------------------------------------------------
-    # DETERMINE DISCIPLINE
+    # DETERMINE MAIN DISCIPLINE
     # --------------------------------------------------------
 
     discipline = None
+
 
     for item in processed_activities:
 
@@ -130,7 +158,10 @@ def save_processing_result(
             {}
         )
 
-        if extracted.get("discipline"):
+
+        if extracted.get(
+            "discipline"
+        ):
 
             discipline = extracted.get(
                 "discipline"
@@ -145,6 +176,7 @@ def save_processing_result(
 
     report_date = None
 
+
     for item in processed_activities:
 
         extracted = item.get(
@@ -152,7 +184,10 @@ def save_processing_result(
             {}
         )
 
-        if extracted.get("date"):
+
+        if extracted.get(
+            "date"
+        ):
 
             report_date = extracted.get(
                 "date"
@@ -166,9 +201,13 @@ def save_processing_result(
     # --------------------------------------------------------
 
     report = create_progress_report(
+
         raw_text=raw_text,
+
         source_type=source_type,
+
         discipline=discipline,
+
         report_date=report_date
     )
 
@@ -191,25 +230,33 @@ def save_processing_result(
 
     for item in processed_activities:
 
-        database_match = create_activity_match(
-            report_id=report_id,
-            extracted_activity=item[
-                "extracted_activity"
-            ],
-            matching=item[
-                "matching"
-            ]
+        database_match = (
+            create_activity_match(
+
+                report_id=report_id,
+
+                extracted_activity=item[
+                    "extracted_activity"
+                ],
+
+                matching=item[
+                    "matching"
+                ]
+            )
         )
 
 
-        # Add database information to API response
         item["review"] = {
-            "match_id": database_match.get(
-                "id"
-            ),
-            "review_status": database_match.get(
-                "review_status"
-            )
+
+            "match_id":
+                database_match.get(
+                    "id"
+                ),
+
+            "review_status":
+                database_match.get(
+                    "review_status"
+                )
         }
 
 
@@ -235,27 +282,28 @@ def get_file_source_text(
         )
 
 
-    elif extension == ".csv":
+    if extension == ".csv":
 
         return extract_text_from_csv(
             file_path
         )
 
 
-    elif extension == ".pdf":
+    if extension == ".pdf":
 
         return extract_text_from_pdf(
             file_path
         )
 
 
-    elif extension == ".txt":
+    if extension == ".txt":
 
-        return Path(
-            file_path
-        ).read_text(
-            encoding="utf-8",
-            errors="replace"
+        return (
+            Path(file_path)
+            .read_text(
+                encoding="utf-8",
+                errors="replace"
+            )
         )
 
 
@@ -270,9 +318,15 @@ def get_file_source_text(
 def root():
 
     return {
-        "project": "SIH26122",
-        "status": "Backend is running",
-        "version": "0.6.0"
+
+        "project":
+            "SIH26122",
+
+        "status":
+            "Backend is running",
+
+        "version":
+            "0.8.0"
     }
 
 
@@ -289,6 +343,33 @@ def health():
 
 
 # ============================================================
+# LATEST PROCESSED RESULT
+# ============================================================
+
+@app.get("/processing/latest")
+def latest_processing_result():
+
+    try:
+
+        result = (
+            get_latest_processing_result()
+        )
+
+
+        return {
+            "result": result
+        }
+
+
+    except Exception as error:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+# ============================================================
 # TEXT DPR
 # ============================================================
 
@@ -299,11 +380,17 @@ def process_dpr(
 
     try:
 
+        # ----------------------------------------------------
+        # VALIDATE INPUT
+        # ----------------------------------------------------
+
         if not request.text.strip():
 
             raise HTTPException(
                 status_code=400,
-                detail="DPR text cannot be empty."
+                detail=(
+                    "DPR text cannot be empty."
+                )
             )
 
 
@@ -327,23 +414,54 @@ def process_dpr(
         )
 
 
+        if not processed_activities:
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "No valid construction "
+                    "progress activities were "
+                    "extracted from the input."
+                )
+            )
+
+
         # ----------------------------------------------------
         # SAVE TO SUPABASE
         # ----------------------------------------------------
 
-        report = save_processing_result(
-            raw_text=request.text,
-            source_type="text",
-            processed_activities=processed_activities
+        report = (
+            save_processing_result(
+
+                raw_text=request.text,
+
+                source_type="text",
+
+                processed_activities=(
+                    processed_activities
+                )
+            )
         )
 
 
         return {
-            "input_type": "text",
-            "report_id": report.get("id"),
-            "database_saved": True,
-            "received_text": request.text,
-            "activities": processed_activities
+
+            "input_type":
+                "text",
+
+            "report_id":
+                report.get(
+                    "id"
+                ),
+
+            "database_saved":
+                True,
+
+            "received_text":
+                request.text,
+
+            "activities":
+                processed_activities
         }
 
 
@@ -384,7 +502,9 @@ async def process_file(
 
 
     extension = (
-        Path(original_filename)
+        Path(
+            original_filename
+        )
         .suffix
         .lower()
     )
@@ -407,6 +527,10 @@ async def process_file(
 
     try:
 
+        # ----------------------------------------------------
+        # READ FILE
+        # ----------------------------------------------------
+
         file_content = await file.read()
 
 
@@ -414,7 +538,31 @@ async def process_file(
 
             raise HTTPException(
                 status_code=400,
-                detail="Uploaded file is empty."
+                detail=(
+                    "Uploaded file is empty."
+                )
+            )
+
+
+        # ----------------------------------------------------
+        # FILE SIZE
+        # ----------------------------------------------------
+
+        max_size = (
+            25
+            * 1024
+            * 1024
+        )
+
+
+        if len(file_content) > max_size:
+
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Uploaded DPR file is too large. "
+                    "Maximum supported size is 25 MB."
+                )
             )
 
 
@@ -437,21 +585,36 @@ async def process_file(
 
 
         # ----------------------------------------------------
-        # SAVE ORIGINAL SOURCE TEXT
+        # READ ORIGINAL SOURCE TEXT
         # ----------------------------------------------------
 
-        source_text = get_file_source_text(
-            temporary_path,
-            extension
+        source_text = (
+            get_file_source_text(
+                temporary_path,
+                extension
+            )
         )
+
+
+        if not source_text.strip():
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "No readable text was found "
+                    "inside the uploaded DPR file."
+                )
+            )
 
 
         # ----------------------------------------------------
         # DPR EXTRACTION
         # ----------------------------------------------------
 
-        extraction = extract_dpr_from_file(
-            temporary_path
+        extraction = (
+            extract_dpr_from_file(
+                temporary_path
+            )
         )
 
 
@@ -466,43 +629,91 @@ async def process_file(
         )
 
 
+        if not processed_activities:
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "The uploaded file was read, "
+                    "but no valid construction "
+                    "progress activities were extracted."
+                )
+            )
+
+
         # ----------------------------------------------------
         # SOURCE TYPE
         # ----------------------------------------------------
 
         source_type_map = {
-            ".xlsx": "excel",
-            ".xlsm": "excel",
-            ".csv": "csv",
-            ".pdf": "pdf",
-            ".txt": "text_file"
+
+            ".xlsx":
+                "excel",
+
+            ".xlsm":
+                "excel",
+
+            ".csv":
+                "csv",
+
+            ".pdf":
+                "pdf",
+
+            ".txt":
+                "text_file"
         }
 
 
-        source_type = source_type_map.get(
-            extension,
-            "file"
+        source_type = (
+            source_type_map.get(
+                extension,
+                "file"
+            )
         )
 
 
         # ----------------------------------------------------
-        # SAVE TO SUPABASE
+        # SAVE
         # ----------------------------------------------------
 
-        report = save_processing_result(
-            raw_text=source_text,
-            source_type=source_type,
-            processed_activities=processed_activities
+        report = (
+            save_processing_result(
+
+                raw_text=source_text,
+
+                source_type=source_type,
+
+                processed_activities=(
+                    processed_activities
+                )
+            )
         )
 
 
         return {
-            "input_type": "file",
-            "report_id": report.get("id"),
-            "database_saved": True,
-            "filename": original_filename,
-            "file_type": extension,
-            "activities": processed_activities
+
+            "input_type":
+                "file",
+
+            "source_type":
+                source_type,
+
+            "report_id":
+                report.get(
+                    "id"
+                ),
+
+            "database_saved":
+                True,
+
+            "filename":
+                original_filename,
+
+            "file_type":
+                extension,
+
+            "activities":
+                processed_activities
         }
 
 
@@ -527,9 +738,15 @@ async def process_file(
             )
         ):
 
-            os.remove(
-                temporary_path
-            )
+            try:
+
+                os.remove(
+                    temporary_path
+                )
+
+            except OSError:
+
+                pass
 
 
 # ============================================================
@@ -548,7 +765,9 @@ async def process_audio(
 
 
     extension = (
-        Path(original_filename)
+        Path(
+            original_filename
+        )
         .suffix
         .lower()
     )
@@ -579,7 +798,9 @@ async def process_audio(
 
             raise HTTPException(
                 status_code=400,
-                detail="Uploaded audio file is empty."
+                detail=(
+                    "Uploaded audio file is empty."
+                )
             )
 
 
@@ -601,10 +822,6 @@ async def process_audio(
             )
 
 
-        # ----------------------------------------------------
-        # TEMP AUDIO FILE
-        # ----------------------------------------------------
-
         with tempfile.NamedTemporaryFile(
             delete=False,
             suffix=extension
@@ -623,23 +840,34 @@ async def process_audio(
         # TRANSCRIPTION
         # ----------------------------------------------------
 
-        transcription = transcribe_audio(
-            temporary_path
+        transcription = (
+            transcribe_audio(
+                temporary_path
+            )
         )
+
+
+        if not transcription.strip():
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "No speech could be transcribed "
+                    "from the uploaded audio."
+                )
+            )
 
 
         # ----------------------------------------------------
         # DPR EXTRACTION
         # ----------------------------------------------------
 
-        extraction = extract_dpr(
-            transcription
+        extraction = (
+            extract_dpr(
+                transcription
+            )
         )
 
-
-        # ----------------------------------------------------
-        # MATCHING
-        # ----------------------------------------------------
 
         processed_activities = (
             match_extracted_activities(
@@ -648,24 +876,57 @@ async def process_audio(
         )
 
 
+        if not processed_activities:
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "Voice transcription succeeded, "
+                    "but no construction progress "
+                    "activities were extracted."
+                )
+            )
+
+
         # ----------------------------------------------------
-        # SAVE TO SUPABASE
+        # SAVE
         # ----------------------------------------------------
 
-        report = save_processing_result(
-            raw_text=transcription,
-            source_type="voice",
-            processed_activities=processed_activities
+        report = (
+            save_processing_result(
+
+                raw_text=transcription,
+
+                source_type="voice",
+
+                processed_activities=(
+                    processed_activities
+                )
+            )
         )
 
 
         return {
-            "input_type": "voice",
-            "report_id": report.get("id"),
-            "database_saved": True,
-            "filename": original_filename,
-            "transcription": transcription,
-            "activities": processed_activities
+
+            "input_type":
+                "voice",
+
+            "report_id":
+                report.get(
+                    "id"
+                ),
+
+            "database_saved":
+                True,
+
+            "filename":
+                original_filename,
+
+            "transcription":
+                transcription,
+
+            "activities":
+                processed_activities
         }
 
 
@@ -690,9 +951,15 @@ async def process_audio(
             )
         ):
 
-            os.remove(
-                temporary_path
-            )
+            try:
+
+                os.remove(
+                    temporary_path
+                )
+
+            except OSError:
+
+                pass
 
 
 # ============================================================
@@ -711,7 +978,9 @@ async def process_scan(
 
 
     extension = (
-        Path(original_filename)
+        Path(
+            original_filename
+        )
         .suffix
         .lower()
     )
@@ -741,7 +1010,9 @@ async def process_scan(
 
             raise HTTPException(
                 status_code=400,
-                detail="Uploaded scan is empty."
+                detail=(
+                    "Uploaded scan is empty."
+                )
             )
 
 
@@ -763,10 +1034,6 @@ async def process_scan(
             )
 
 
-        # ----------------------------------------------------
-        # TEMP SCAN FILE
-        # ----------------------------------------------------
-
         with tempfile.NamedTemporaryFile(
             delete=False,
             suffix=extension
@@ -782,26 +1049,37 @@ async def process_scan(
 
 
         # ----------------------------------------------------
-        # OCR / VISION
+        # OCR
         # ----------------------------------------------------
 
-        scanned_text = extract_text_from_scan(
-            temporary_path
+        scanned_text = (
+            extract_text_from_scan(
+                temporary_path
+            )
         )
+
+
+        if not scanned_text.strip():
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "No readable construction text "
+                    "was found in the scanned note."
+                )
+            )
 
 
         # ----------------------------------------------------
         # DPR EXTRACTION
         # ----------------------------------------------------
 
-        extraction = extract_dpr(
-            scanned_text
+        extraction = (
+            extract_dpr(
+                scanned_text
+            )
         )
 
-
-        # ----------------------------------------------------
-        # MATCHING
-        # ----------------------------------------------------
 
         processed_activities = (
             match_extracted_activities(
@@ -810,24 +1088,57 @@ async def process_scan(
         )
 
 
+        if not processed_activities:
+
+            raise HTTPException(
+                status_code=422,
+                detail=(
+                    "The scanned note was read, "
+                    "but no valid progress "
+                    "activities were extracted."
+                )
+            )
+
+
         # ----------------------------------------------------
-        # SAVE TO SUPABASE
+        # SAVE
         # ----------------------------------------------------
 
-        report = save_processing_result(
-            raw_text=scanned_text,
-            source_type="scan",
-            processed_activities=processed_activities
+        report = (
+            save_processing_result(
+
+                raw_text=scanned_text,
+
+                source_type="scan",
+
+                processed_activities=(
+                    processed_activities
+                )
+            )
         )
 
 
         return {
-            "input_type": "scan",
-            "report_id": report.get("id"),
-            "database_saved": True,
-            "filename": original_filename,
-            "ocr_text": scanned_text,
-            "activities": processed_activities
+
+            "input_type":
+                "scan",
+
+            "report_id":
+                report.get(
+                    "id"
+                ),
+
+            "database_saved":
+                True,
+
+            "filename":
+                original_filename,
+
+            "ocr_text":
+                scanned_text,
+
+            "activities":
+                processed_activities
         }
 
 
@@ -852,9 +1163,15 @@ async def process_scan(
             )
         ):
 
-            os.remove(
-                temporary_path
-            )
+            try:
+
+                os.remove(
+                    temporary_path
+                )
+
+            except OSError:
+
+                pass
 
 
 # ============================================================
@@ -866,12 +1183,20 @@ def pending_reviews():
 
     try:
 
-        reviews = get_pending_matches()
+        reviews = (
+            get_pending_matches()
+        )
 
 
         return {
-            "count": len(reviews),
-            "reviews": reviews
+
+            "count":
+                len(
+                    reviews
+                ),
+
+            "reviews":
+                reviews
         }
 
 
@@ -894,14 +1219,23 @@ def accept_review(
 
     try:
 
-        result = accept_activity_match(
-            match_id
+        result = (
+            accept_activity_match(
+                match_id
+            )
         )
 
 
         return {
-            "message": "Match accepted.",
-            "match": result
+
+            "message":
+                "Match accepted.",
+
+            "schedule_updated":
+                True,
+
+            "match":
+                result
         }
 
 
@@ -932,14 +1266,23 @@ def reject_review(
 
     try:
 
-        result = reject_activity_match(
-            match_id
+        result = (
+            reject_activity_match(
+                match_id
+            )
         )
 
 
         return {
-            "message": "Match rejected.",
-            "match": result
+
+            "message":
+                "Match rejected.",
+
+            "schedule_updated":
+                False,
+
+            "match":
+                result
         }
 
 
@@ -971,15 +1314,28 @@ def change_review(
 
     try:
 
-        result = change_activity_match(
-            match_id=match_id,
-            new_activity_id=request.activity_id
+        result = (
+            change_activity_match(
+
+                match_id=match_id,
+
+                new_activity_id=(
+                    request.activity_id
+                )
+            )
         )
 
 
         return {
-            "message": "Match changed.",
-            "match": result
+
+            "message":
+                "Match changed.",
+
+            "schedule_updated":
+                True,
+
+            "match":
+                result
         }
 
 
@@ -1014,8 +1370,52 @@ def schedule_activities():
 
 
         return {
-            "count": len(activities),
-            "activities": activities
+
+            "count":
+                len(
+                    activities
+                ),
+
+            "activities":
+                activities
+        }
+
+
+    except Exception as error:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+# ============================================================
+# CLEAR ALL ENTERED / PROCESSED DATA
+# ============================================================
+
+@app.delete("/data/reset")
+def reset_entered_data():
+
+    try:
+
+        result = (
+            clear_all_entered_data()
+        )
+
+
+        return {
+
+            "message":
+                (
+                    "All entered DPR data, "
+                    "planner reviews and actual "
+                    "progress were cleared. "
+                    "The master project schedule "
+                    "was preserved."
+                ),
+
+            "result":
+                result
         }
 
 
