@@ -10,9 +10,9 @@ from pydantic import BaseModel, Field
 from pypdf import PdfReader
 
 
-# ---------------------------------------------------------
+# ============================================================
 # PROJECT / ENVIRONMENT SETUP
-# ---------------------------------------------------------
+# ============================================================
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
@@ -22,7 +22,6 @@ load_dotenv(ENV_FILE)
 
 GROQ_API_KEY = os.getenv("GROQ_API_KEY")
 
-# Allows us to change model later from .env without editing code.
 GROQ_MODEL = os.getenv(
     "GROQ_MODEL",
     "openai/gpt-oss-20b"
@@ -33,12 +32,14 @@ if not GROQ_API_KEY:
         "GROQ_API_KEY was not found in the project .env file"
     )
 
-client = Groq(api_key=GROQ_API_KEY)
+client = Groq(
+    api_key=GROQ_API_KEY
+)
 
 
-# ---------------------------------------------------------
+# ============================================================
 # DATA MODELS
-# ---------------------------------------------------------
+# ============================================================
 
 DPRStatus = Literal[
     "Completed",
@@ -52,13 +53,9 @@ DPRStatus = Literal[
 class DPRData(BaseModel):
 
     activity_description: str | None = None
-
     discipline: str | None = None
-
     status: DPRStatus | None = None
-
     tag: str | None = None
-
     date: str | None = None
 
 
@@ -69,9 +66,100 @@ class DPRExtractionResult(BaseModel):
     )
 
 
-# ---------------------------------------------------------
-# FILE TEXT EXTRACTION
-# ---------------------------------------------------------
+# ============================================================
+# GROQ STRUCTURED OUTPUT SCHEMA
+# ============================================================
+
+DPR_RESPONSE_SCHEMA = {
+
+    "type": "object",
+
+    "properties": {
+
+        "activities": {
+
+            "type": "array",
+
+            "items": {
+
+                "type": "object",
+
+                "properties": {
+
+                    "activity_description": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+
+                    "discipline": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+
+                    "status": {
+
+                        "anyOf": [
+
+                            {
+                                "type": "string",
+                                "enum": [
+                                    "Completed",
+                                    "Started",
+                                    "In Progress",
+                                    "Delayed",
+                                    "Not Started"
+                                ]
+                            },
+
+                            {
+                                "type": "null"
+                            }
+                        ]
+                    },
+
+                    "tag": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    },
+
+                    "date": {
+                        "type": [
+                            "string",
+                            "null"
+                        ]
+                    }
+                },
+
+                "required": [
+                    "activity_description",
+                    "discipline",
+                    "status",
+                    "tag",
+                    "date"
+                ],
+
+                "additionalProperties": False
+            }
+        }
+    },
+
+    "required": [
+        "activities"
+    ],
+
+    "additionalProperties": False
+}
+
+
+# ============================================================
+# PDF TEXT EXTRACTION
+# ============================================================
 
 def extract_text_from_pdf(
     pdf_path: str | Path
@@ -84,7 +172,9 @@ def extract_text_from_pdf(
             f"PDF file not found: {pdf_path}"
         )
 
-    reader = PdfReader(pdf_path)
+    reader = PdfReader(
+        pdf_path
+    )
 
     text_parts = []
 
@@ -96,13 +186,20 @@ def extract_text_from_pdf(
         page_text = page.extract_text()
 
         if page_text:
+
             text_parts.append(
                 f"\n--- Page {page_number} ---\n"
                 f"{page_text}"
             )
 
-    return "\n".join(text_parts)
+    return "\n".join(
+        text_parts
+    )
 
+
+# ============================================================
+# EXCEL TEXT EXTRACTION
+# ============================================================
 
 def extract_text_from_excel(
     excel_path: str | Path
@@ -123,30 +220,48 @@ def extract_text_from_excel(
 
     text_parts = []
 
-    for sheet in workbook.worksheets:
+    try:
 
-        text_parts.append(
-            f"\n--- Sheet: {sheet.title} ---"
-        )
+        for sheet in workbook.worksheets:
 
-        for row in sheet.iter_rows(
-            values_only=True
-        ):
+            text_parts.append(
+                f"\n--- Sheet: {sheet.title} ---"
+            )
 
-            values = [
-                str(cell).strip()
-                for cell in row
-                if cell is not None
-                and str(cell).strip()
-            ]
+            for row in sheet.iter_rows(
+                values_only=True
+            ):
 
-            if values:
-                text_parts.append(
-                    " | ".join(values)
-                )
+                values = []
 
-    return "\n".join(text_parts)
+                for cell in row:
 
+                    if cell is None:
+                        continue
+
+                    value = str(cell).strip()
+
+                    if value:
+                        values.append(value)
+
+                if values:
+
+                    text_parts.append(
+                        " | ".join(values)
+                    )
+
+    finally:
+
+        workbook.close()
+
+    return "\n".join(
+        text_parts
+    )
+
+
+# ============================================================
+# CSV TEXT EXTRACTION
+# ============================================================
 
 def extract_text_from_csv(
     csv_path: str | Path
@@ -164,6 +279,7 @@ def extract_text_from_csv(
     with csv_path.open(
         "r",
         encoding="utf-8-sig",
+        errors="replace",
         newline=""
     ) as file:
 
@@ -171,123 +287,131 @@ def extract_text_from_csv(
 
         for row in reader:
 
-            values = [
-                str(cell).strip()
-                for cell in row
-                if str(cell).strip()
-            ]
+            values = []
+
+            for cell in row:
+
+                value = str(cell).strip()
+
+                if value:
+                    values.append(value)
 
             if values:
+
                 text_parts.append(
                     " | ".join(values)
                 )
 
-    return "\n".join(text_parts)
+    return "\n".join(
+        text_parts
+    )
 
 
-# ---------------------------------------------------------
+# ============================================================
 # AI DPR EXTRACTION
-# ---------------------------------------------------------
+# ============================================================
 
 def extract_dpr(
     dpr_text: str,
     reference_date: str | None = None
 ) -> DPRExtractionResult:
 
-    if not dpr_text or not dpr_text.strip():
+    if (
+        not dpr_text
+        or not dpr_text.strip()
+    ):
+
         raise ValueError(
             "DPR text cannot be empty"
         )
 
-    reference_date_instruction = ""
+    # --------------------------------------------------------
+    # DATE INSTRUCTION
+    # --------------------------------------------------------
 
     if reference_date:
 
         reference_date_instruction = f"""
-REFERENCE DATE:
+Reference date: {reference_date}
 
-{reference_date}
-
-If the DPR contains expressions such as
-"today" or "yesterday", interpret them
-relative to this reference date.
+If expressions such as "today" or "yesterday"
+appear, interpret them relative to this date.
 """
 
     else:
 
         reference_date_instruction = """
-No reference date has been supplied.
+No reference date is available.
 
-If the DPR only says "today", "yesterday",
-or another relative date and the actual
-calendar date cannot be determined,
-return null for date.
+If only a relative date such as "today" or
+"yesterday" appears and the actual date cannot
+be determined, return null.
 """
+
+    # --------------------------------------------------------
+    # PROMPT
+    # --------------------------------------------------------
 
     prompt = f"""
 You are an engineering Daily Progress Report
-(DPR) extraction assistant for a large
-infrastructure project.
+(DPR) extraction system for infrastructure
+construction projects.
 
-The DPR may contain progress information from:
+Extract construction progress activities from
+the supplied DPR content.
 
-- Civil
-- Piping
-- Mechanical
-- Electrical
-- Instrumentation
-- HSE
-- Other engineering disciplines
+The report may contain Civil, Piping,
+Mechanical, Electrical, Instrumentation,
+HSE or other construction activities.
 
-The input may be:
+IMPORTANT RULES:
 
-- Plain text
-- A paragraph
-- Poorly formatted text
-- Abbreviated site language
-- PDF extracted text
-- Excel extracted text
-- CSV extracted text
+1. A DPR may contain MULTIPLE activities.
+2. Create one separate object for every distinct
+   construction progress activity.
+3. Never invent information.
+4. Return null when information is unavailable.
+5. Ignore headings, administrative text and
+   unrelated spreadsheet information.
 
+For every activity identify:
 
-IMPORTANT:
-
-A DPR may contain MULTIPLE activities.
-
-Create a SEPARATE activity object for every
-distinct progress activity.
-
-Do NOT combine separate activities into
-one activity.
+- activity_description
+- discipline
+- status
+- tag
+- date
 
 
-For every activity extract EXACTLY:
+ACTIVITY DESCRIPTION:
 
-1. activity_description
-2. discipline
-3. status
-4. tag
-5. date
+Keep it short and meaningful.
 
+Examples:
 
-RULES:
-
-- Read the complete DPR before extracting.
-- Never invent information.
-- If information is genuinely unavailable,
-  use null.
-- Keep activity_description short but meaningful.
-- Preserve equipment numbers, foundation numbers,
-  line numbers, structure IDs and similar identifiers.
-- Use these identifiers as tag when appropriate.
-- Discipline may be inferred only when strongly
-  supported by engineering terminology.
-- Otherwise discipline must be null.
+"F101 foundation concreting"
+"Reinforcement for F102"
+"Cable tray installation Area A"
 
 
-STATUS RULES:
+DISCIPLINE:
 
-Use only:
+Examples include:
+
+Civil
+Piping
+Mechanical
+Electrical
+Instrumentation
+HSE
+
+Only infer discipline when engineering context
+strongly supports it.
+
+
+STATUS:
+
+Use ONLY these values:
 
 Completed
 Started
@@ -295,83 +419,59 @@ In Progress
 Delayed
 Not Started
 
-
 Examples:
 
-"finished"
-"completed"
-"work done"
-
+finished / completed / work done
 → Completed
 
-
-"started"
-"commenced"
-"began"
-
+started / commenced / began
 → Started
 
-
-"work underway"
-"ongoing"
-"currently being executed"
-
+ongoing / underway / in progress
 → In Progress
 
-
-"delayed"
-"held up"
-"stopped due to..."
-
+delayed / held up / stopped due to
 → Delayed
 
+not started / yet to start
+→ Not Started
 
-Do not confuse percentage or quantity progress
-with status.
+
+TAG:
+
+Preserve identifiers such as:
+
+F101
+F102
+L24
+P-104
+ST-03
+Area-A
+
+Do not invent a tag.
 
 
-DATE RULES:
+DATE:
 
-- Convert explicit dates to YYYY-MM-DD.
-- Do not invent dates.
-- Follow the reference-date instruction below.
+Convert explicit dates to YYYY-MM-DD.
+
+Never invent a date.
 
 {reference_date_instruction}
 
 
-TAG EXAMPLES:
+DPR CONTENT:
 
-Foundation F101
-→ F101
-
-Line L24
-→ L24
-
-Equipment P-104
-→ P-104
-
-
-RETURN FORMAT:
-
-Return ONLY valid JSON in exactly this structure:
-
-{{
-    "activities": [
-        {{
-            "activity_description": "...",
-            "discipline": "...",
-            "status": "...",
-            "tag": "...",
-            "date": "YYYY-MM-DD"
-        }}
-    ]
-}}
-
-
-DPR TEXT:
+---------------- START ----------------
 
 {dpr_text}
+
+---------------- END ----------------
 """
+
+    # --------------------------------------------------------
+    # GROQ REQUEST
+    # --------------------------------------------------------
 
     try:
 
@@ -383,9 +483,9 @@ DPR TEXT:
                 {
                     "role": "system",
                     "content": (
-                        "You extract structured "
-                        "engineering construction DPR data. "
-                        "Return only valid JSON."
+                        "Extract structured engineering DPR "
+                        "activities and follow the supplied "
+                        "JSON schema exactly."
                     )
                 },
                 {
@@ -395,7 +495,12 @@ DPR TEXT:
             ],
 
             response_format={
-                "type": "json_object"
+                "type": "json_schema",
+                "json_schema": {
+                    "name": "dpr_extraction",
+                    "strict": True,
+                    "schema": DPR_RESPONSE_SCHEMA
+                }
             },
 
             temperature=0
@@ -407,32 +512,259 @@ DPR TEXT:
             f"Groq DPR extraction failed: {exc}"
         ) from exc
 
+    # --------------------------------------------------------
+    # READ RESPONSE
+    # --------------------------------------------------------
 
-    result = response.choices[0].message.content
+    result = (
+        response
+        .choices[0]
+        .message
+        .content
+    )
 
     if not result:
+
         raise RuntimeError(
             "Groq returned an empty response"
         )
 
+    # --------------------------------------------------------
+    # PYDANTIC VALIDATION
+    # --------------------------------------------------------
 
     try:
 
-        return DPRExtractionResult.model_validate_json(
-            result
+        return (
+            DPRExtractionResult
+            .model_validate_json(
+                result
+            )
         )
 
     except Exception as exc:
 
         raise RuntimeError(
-            "AI response could not be validated "
-            f"as DPR data. Raw response: {result}"
+            "Groq response could not be "
+            "validated as DPR data. "
+            f"Raw response: {result}"
         ) from exc
 
 
-# ---------------------------------------------------------
+# ============================================================
+# SAFE CHUNK EXTRACTION
+# ============================================================
+
+def extract_chunk_safely(
+    lines: list[str],
+    sheet_name: str,
+    reference_date: str | None = None
+) -> list[DPRData]:
+
+    if not lines:
+        return []
+
+    chunk_text = (
+        f"Excel Sheet: {sheet_name}\n\n"
+        + "\n".join(lines)
+    )
+
+    try:
+
+        result = extract_dpr(
+            chunk_text,
+            reference_date=reference_date
+        )
+
+        return result.activities
+
+    except Exception:
+
+        # If the chunk is already one row,
+        # retrying by splitting further is impossible.
+        if len(lines) == 1:
+            raise
+
+        # Split failed chunk into two smaller pieces.
+        middle = len(lines) // 2
+
+        first_half = lines[:middle]
+        second_half = lines[middle:]
+
+        activities = []
+
+        activities.extend(
+            extract_chunk_safely(
+                first_half,
+                sheet_name,
+                reference_date
+            )
+        )
+
+        activities.extend(
+            extract_chunk_safely(
+                second_half,
+                sheet_name,
+                reference_date
+            )
+        )
+
+        return activities
+
+
+# ============================================================
+# EXCEL DPR CHUNK PROCESSING
+# ============================================================
+
+def extract_dpr_from_excel_chunks(
+    excel_path: str | Path,
+    reference_date: str | None = None,
+    chunk_size: int = 8
+) -> DPRExtractionResult:
+
+    excel_path = Path(excel_path)
+
+    if not excel_path.exists():
+
+        raise FileNotFoundError(
+            f"Excel file not found: {excel_path}"
+        )
+
+    workbook = load_workbook(
+        excel_path,
+        data_only=True,
+        read_only=True
+    )
+
+    all_activities = []
+
+    try:
+
+        for sheet in workbook.worksheets:
+
+            rows = []
+
+            # ------------------------------------------------
+            # CONVERT EXCEL ROWS TO TEXT
+            # ------------------------------------------------
+
+            for row in sheet.iter_rows(
+                values_only=True
+            ):
+
+                values = []
+
+                for cell in row:
+
+                    if cell is None:
+                        continue
+
+                    value = str(cell).strip()
+
+                    if value:
+
+                        values.append(
+                            value
+                        )
+
+                if values:
+
+                    rows.append(
+                        " | ".join(values)
+                    )
+
+            # ------------------------------------------------
+            # IGNORE EMPTY SHEETS
+            # ------------------------------------------------
+
+            if not rows:
+                continue
+
+            # ------------------------------------------------
+            # PROCESS SMALL CHUNKS
+            # ------------------------------------------------
+
+            for start in range(
+                0,
+                len(rows),
+                chunk_size
+            ):
+
+                chunk = rows[
+                    start:
+                    start + chunk_size
+                ]
+
+                activities = (
+                    extract_chunk_safely(
+                        lines=chunk,
+                        sheet_name=sheet.title,
+                        reference_date=reference_date
+                    )
+                )
+
+                all_activities.extend(
+                    activities
+                )
+
+    finally:
+
+        workbook.close()
+
+    # --------------------------------------------------------
+    # REMOVE DUPLICATES
+    # --------------------------------------------------------
+
+    unique_activities = []
+
+    seen = set()
+
+    for activity in all_activities:
+
+        key = (
+
+            (
+                activity.activity_description
+                or ""
+            ).lower().strip(),
+
+            (
+                activity.discipline
+                or ""
+            ).lower().strip(),
+
+            (
+                activity.status
+                or ""
+            ).lower().strip(),
+
+            (
+                activity.tag
+                or ""
+            ).lower().strip(),
+
+            (
+                activity.date
+                or ""
+            ).lower().strip()
+        )
+
+        if key not in seen:
+
+            seen.add(key)
+
+            unique_activities.append(
+                activity
+            )
+
+    return DPRExtractionResult(
+        activities=unique_activities
+    )
+
+
+# ============================================================
 # FILE DPR EXTRACTION
-# ---------------------------------------------------------
+# ============================================================
 
 def extract_dpr_from_file(
     file_path: str | Path,
@@ -442,29 +774,48 @@ def extract_dpr_from_file(
     file_path = Path(file_path)
 
     if not file_path.exists():
+
         raise FileNotFoundError(
             f"File not found: {file_path}"
         )
 
-    extension = file_path.suffix.lower()
+    extension = (
+        file_path
+        .suffix
+        .lower()
+    )
 
+    # --------------------------------------------------------
+    # EXCEL
+    # --------------------------------------------------------
 
-    if extension == ".pdf":
+    if extension in [
+        ".xlsx",
+        ".xlsm"
+    ]:
+
+        # IMPORTANT:
+        # Excel is processed in small chunks instead
+        # of sending the entire workbook to Groq.
+
+        return extract_dpr_from_excel_chunks(
+            file_path,
+            reference_date=reference_date
+        )
+
+    # --------------------------------------------------------
+    # PDF
+    # --------------------------------------------------------
+
+    elif extension == ".pdf":
 
         text = extract_text_from_pdf(
             file_path
         )
 
-
-    elif extension in [
-        ".xlsx",
-        ".xlsm"
-    ]:
-
-        text = extract_text_from_excel(
-            file_path
-        )
-
+    # --------------------------------------------------------
+    # CSV
+    # --------------------------------------------------------
 
     elif extension == ".csv":
 
@@ -472,6 +823,9 @@ def extract_dpr_from_file(
             file_path
         )
 
+    # --------------------------------------------------------
+    # TXT
+    # --------------------------------------------------------
 
     elif extension == ".txt":
 
@@ -480,24 +834,33 @@ def extract_dpr_from_file(
             errors="replace"
         )
 
+    # --------------------------------------------------------
+    # UNSUPPORTED FILE
+    # --------------------------------------------------------
 
     else:
 
         raise ValueError(
             "Unsupported file type: "
             f"{extension}. "
-            "Supported formats are PDF, "
-            "XLSX, XLSM, CSV and TXT."
+            "Supported formats are "
+            "PDF, XLSX, XLSM, CSV and TXT."
         )
 
+    # --------------------------------------------------------
+    # EMPTY CONTENT CHECK
+    # --------------------------------------------------------
 
     if not text.strip():
 
         raise ValueError(
             "No readable text was found "
-            "inside the file."
+            "inside the uploaded file."
         )
 
+    # --------------------------------------------------------
+    # NORMAL TEXT EXTRACTION
+    # --------------------------------------------------------
 
     return extract_dpr(
         text,
@@ -505,20 +868,24 @@ def extract_dpr_from_file(
     )
 
 
-# ---------------------------------------------------------
+# ============================================================
 # LOCAL TEST
-# ---------------------------------------------------------
+# ============================================================
 
 if __name__ == "__main__":
 
     sample_dpr = """
-    F101 concreting completed today.
-    Reinforcement for F102 started today.
+    F101 concreting completed.
+    Reinforcement for F102 started.
     Cable tray installation in Area A is in progress.
     """
 
     result = extract_dpr(
         sample_dpr
+    )
+
+    print(
+        "\n========== DPR EXTRACTION RESULT ==========\n"
     )
 
     print(
