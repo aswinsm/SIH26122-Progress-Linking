@@ -20,6 +20,11 @@ from backend.services.voice_processor import (
     SUPPORTED_AUDIO_EXTENSIONS,
 )
 
+from backend.services.scan_processor import (
+    extract_text_from_scan,
+    SUPPORTED_SCAN_EXTENSIONS,
+)
+
 
 # ============================================================
 # FASTAPI SETUP
@@ -27,7 +32,7 @@ from backend.services.voice_processor import (
 
 app = FastAPI(
     title="SIH26122 Progress Linking API",
-    version="0.4.0"
+    version="0.5.0"
 )
 
 
@@ -62,40 +67,22 @@ matcher = ActivityMatcher()
 # MATCHING HELPER
 # ============================================================
 
-def match_extracted_activities(
-    extraction
-):
+def match_extracted_activities(extraction):
 
     processed_activities = []
 
     for activity in extraction.activities:
 
-        match_result = (
-            matcher.match_activity(
-
-                activity_description=(
-                    activity.activity_description
-                ),
-
-                discipline=(
-                    activity.discipline
-                ),
-
-                tag=(
-                    activity.tag
-                ),
-
-                top_k=3
-            )
+        match_result = matcher.match_activity(
+            activity_description=activity.activity_description,
+            discipline=activity.discipline,
+            tag=activity.tag,
+            top_k=3
         )
 
         processed_activities.append({
-
-            "extracted_activity":
-                activity.model_dump(),
-
-            "matching":
-                match_result
+            "extracted_activity": activity.model_dump(),
+            "matching": match_result
         })
 
     return processed_activities
@@ -110,7 +97,8 @@ def root():
 
     return {
         "project": "SIH26122",
-        "status": "Backend is running"
+        "status": "Backend is running",
+        "version": "0.5.0"
     }
 
 
@@ -148,15 +136,9 @@ def process_dpr(
         )
 
         return {
-
-            "input_type":
-                "text",
-
-            "received_text":
-                request.text,
-
-            "activities":
-                processed_activities
+            "input_type": "text",
+            "received_text": request.text,
+            "activities": processed_activities
         }
 
     except Exception as error:
@@ -177,7 +159,6 @@ async def process_file(
 ):
 
     allowed_extensions = {
-
         ".xlsx",
         ".xlsm",
         ".csv",
@@ -185,17 +166,13 @@ async def process_file(
         ".txt",
     }
 
-
     original_filename = (
         file.filename
         or "uploaded_file"
     )
 
-
     extension = (
-        Path(
-            original_filename
-        )
+        Path(original_filename)
         .suffix
         .lower()
     )
@@ -208,9 +185,7 @@ async def process_file(
     if extension not in allowed_extensions:
 
         raise HTTPException(
-
             status_code=400,
-
             detail=(
                 "Unsupported file type. "
                 "Supported formats: "
@@ -276,18 +251,10 @@ async def process_file(
 
 
         return {
-
-            "input_type":
-                "file",
-
-            "filename":
-                original_filename,
-
-            "file_type":
-                extension,
-
-            "activities":
-                processed_activities
+            "input_type": "file",
+            "filename": original_filename,
+            "file_type": extension,
+            "activities": processed_activities
         }
 
 
@@ -334,9 +301,7 @@ async def process_audio(
 
 
     extension = (
-        Path(
-            original_filename
-        )
+        Path(original_filename)
         .suffix
         .lower()
     )
@@ -346,15 +311,10 @@ async def process_audio(
     # VALIDATE AUDIO TYPE
     # --------------------------------------------------------
 
-    if (
-        extension
-        not in SUPPORTED_AUDIO_EXTENSIONS
-    ):
+    if extension not in SUPPORTED_AUDIO_EXTENSIONS:
 
         raise HTTPException(
-
             status_code=400,
-
             detail=(
                 "Unsupported audio format. "
                 "Supported formats: "
@@ -387,7 +347,7 @@ async def process_audio(
 
 
         # ----------------------------------------------------
-        # MAXIMUM SIZE
+        # MAXIMUM AUDIO SIZE
         # ----------------------------------------------------
 
         max_size = (
@@ -397,14 +357,10 @@ async def process_audio(
         )
 
 
-        if len(
-            audio_content
-        ) > max_size:
+        if len(audio_content) > max_size:
 
             raise HTTPException(
-
                 status_code=400,
-
                 detail=(
                     "Audio file is too large. "
                     "Please upload an audio file "
@@ -467,18 +423,181 @@ async def process_audio(
         # ----------------------------------------------------
 
         return {
+            "input_type": "voice",
+            "filename": original_filename,
+            "transcription": transcription,
+            "activities": processed_activities
+        }
 
-            "input_type":
-                "voice",
 
-            "filename":
-                original_filename,
+    except HTTPException:
 
-            "transcription":
-                transcription,
+        raise
 
-            "activities":
-                processed_activities
+
+    except Exception as error:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+    finally:
+
+        if (
+            temporary_path
+            and os.path.exists(
+                temporary_path
+            )
+        ):
+
+            os.remove(
+                temporary_path
+            )
+
+
+# ============================================================
+# SCANNED NOTE / IMAGE DPR
+# ============================================================
+
+@app.post("/process-scan")
+async def process_scan(
+    file: UploadFile = File(...)
+):
+
+    original_filename = (
+        file.filename
+        or "scanned_note.jpg"
+    )
+
+
+    extension = (
+        Path(original_filename)
+        .suffix
+        .lower()
+    )
+
+
+    # --------------------------------------------------------
+    # VALIDATE SCAN TYPE
+    # --------------------------------------------------------
+
+    if extension not in SUPPORTED_SCAN_EXTENSIONS:
+
+        raise HTTPException(
+            status_code=400,
+            detail=(
+                "Unsupported scanned-note format. "
+                "Supported formats: "
+                "JPG, JPEG, PNG, WEBP and PDF."
+            )
+        )
+
+
+    temporary_path = None
+
+
+    try:
+
+        # ----------------------------------------------------
+        # READ SCAN
+        # ----------------------------------------------------
+
+        scan_content = (
+            await file.read()
+        )
+
+
+        if not scan_content:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Uploaded scan is empty."
+            )
+
+
+        # ----------------------------------------------------
+        # MAXIMUM SCAN SIZE
+        # ----------------------------------------------------
+
+        max_size = (
+            20
+            * 1024
+            * 1024
+        )
+
+
+        if len(scan_content) > max_size:
+
+            raise HTTPException(
+                status_code=400,
+                detail=(
+                    "Scanned file is too large. "
+                    "Please upload a file "
+                    "below 20 MB."
+                )
+            )
+
+
+        # ----------------------------------------------------
+        # TEMPORARY SCAN FILE
+        # ----------------------------------------------------
+
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=extension
+        ) as temporary_file:
+
+            temporary_file.write(
+                scan_content
+            )
+
+            temporary_path = (
+                temporary_file.name
+            )
+
+
+        # ----------------------------------------------------
+        # OCR / VISION
+        # ----------------------------------------------------
+
+        scanned_text = (
+            extract_text_from_scan(
+                temporary_path
+            )
+        )
+
+
+        # ----------------------------------------------------
+        # DPR EXTRACTION
+        # ----------------------------------------------------
+
+        extraction = extract_dpr(
+            scanned_text
+        )
+
+
+        # ----------------------------------------------------
+        # ACTIVITY MATCHING
+        # ----------------------------------------------------
+
+        processed_activities = (
+            match_extracted_activities(
+                extraction
+            )
+        )
+
+
+        # ----------------------------------------------------
+        # RESPONSE
+        # ----------------------------------------------------
+
+        return {
+            "input_type": "scan",
+            "filename": original_filename,
+            "ocr_text": scanned_text,
+            "activities": processed_activities
         }
 
 

@@ -11,3 +11,4 @@ groq
 pypdf
 sentence-transformers
 numpy
+pymupdf
