@@ -10,7 +10,15 @@ from backend.services.dpr_extractor import (
     extract_dpr,
     extract_dpr_from_file,
 )
-from backend.services.activity_matcher import ActivityMatcher
+
+from backend.services.activity_matcher import (
+    ActivityMatcher,
+)
+
+from backend.services.voice_processor import (
+    transcribe_audio,
+    SUPPORTED_AUDIO_EXTENSIONS,
+)
 
 
 # ============================================================
@@ -19,7 +27,7 @@ from backend.services.activity_matcher import ActivityMatcher
 
 app = FastAPI(
     title="SIH26122 Progress Linking API",
-    version="0.3.0"
+    version="0.4.0"
 )
 
 
@@ -36,7 +44,7 @@ app.add_middleware(
 
 
 # ============================================================
-# REQUEST MODELS
+# REQUEST MODEL
 # ============================================================
 
 class DPRRequest(BaseModel):
@@ -47,37 +55,54 @@ class DPRRequest(BaseModel):
 # ACTIVITY MATCHER
 # ============================================================
 
-# Load model + schedule once when backend starts
 matcher = ActivityMatcher()
 
 
 # ============================================================
-# HELPER
+# MATCHING HELPER
 # ============================================================
 
-def match_extracted_activities(extraction):
+def match_extracted_activities(
+    extraction
+):
 
     processed_activities = []
 
     for activity in extraction.activities:
 
-        match_result = matcher.match_activity(
-            activity_description=activity.activity_description,
-            discipline=activity.discipline,
-            tag=activity.tag,
-            top_k=3
+        match_result = (
+            matcher.match_activity(
+
+                activity_description=(
+                    activity.activity_description
+                ),
+
+                discipline=(
+                    activity.discipline
+                ),
+
+                tag=(
+                    activity.tag
+                ),
+
+                top_k=3
+            )
         )
 
         processed_activities.append({
-            "extracted_activity": activity.model_dump(),
-            "matching": match_result
+
+            "extracted_activity":
+                activity.model_dump(),
+
+            "matching":
+                match_result
         })
 
     return processed_activities
 
 
 # ============================================================
-# BASIC ROUTES
+# ROOT
 # ============================================================
 
 @app.get("/")
@@ -88,6 +113,10 @@ def root():
         "status": "Backend is running"
     }
 
+
+# ============================================================
+# HEALTH
+# ============================================================
 
 @app.get("/health")
 def health():
@@ -102,7 +131,9 @@ def health():
 # ============================================================
 
 @app.post("/process-dpr")
-def process_dpr(request: DPRRequest):
+def process_dpr(
+    request: DPRRequest
+):
 
     try:
 
@@ -117,9 +148,15 @@ def process_dpr(request: DPRRequest):
         )
 
         return {
-            "input_type": "text",
-            "received_text": request.text,
-            "activities": processed_activities
+
+            "input_type":
+                "text",
+
+            "received_text":
+                request.text,
+
+            "activities":
+                processed_activities
         }
 
     except Exception as error:
@@ -140,6 +177,7 @@ async def process_file(
 ):
 
     allowed_extensions = {
+
         ".xlsx",
         ".xlsm",
         ".csv",
@@ -147,23 +185,32 @@ async def process_file(
         ".txt",
     }
 
+
     original_filename = (
-        file.filename or "uploaded_file"
+        file.filename
+        or "uploaded_file"
     )
 
-    extension = Path(
-        original_filename
-    ).suffix.lower()
+
+    extension = (
+        Path(
+            original_filename
+        )
+        .suffix
+        .lower()
+    )
 
 
     # --------------------------------------------------------
-    # VALIDATE FILE TYPE
+    # VALIDATE FILE
     # --------------------------------------------------------
 
     if extension not in allowed_extensions:
 
         raise HTTPException(
+
             status_code=400,
+
             detail=(
                 "Unsupported file type. "
                 "Supported formats: "
@@ -174,13 +221,11 @@ async def process_file(
 
     temporary_path = None
 
+
     try:
 
-        # ----------------------------------------------------
-        # READ UPLOADED FILE
-        # ----------------------------------------------------
-
         file_content = await file.read()
+
 
         if not file_content:
 
@@ -191,7 +236,7 @@ async def process_file(
 
 
         # ----------------------------------------------------
-        # SAVE TEMPORARILY
+        # CREATE TEMP FILE
         # ----------------------------------------------------
 
         with tempfile.NamedTemporaryFile(
@@ -209,7 +254,7 @@ async def process_file(
 
 
         # ----------------------------------------------------
-        # RAYHAN DPR EXTRACTION
+        # DPR EXTRACTION
         # ----------------------------------------------------
 
         extraction = (
@@ -220,7 +265,194 @@ async def process_file(
 
 
         # ----------------------------------------------------
-        # SKANDAN MATCHING
+        # MATCHING
+        # ----------------------------------------------------
+
+        processed_activities = (
+            match_extracted_activities(
+                extraction
+            )
+        )
+
+
+        return {
+
+            "input_type":
+                "file",
+
+            "filename":
+                original_filename,
+
+            "file_type":
+                extension,
+
+            "activities":
+                processed_activities
+        }
+
+
+    except HTTPException:
+
+        raise
+
+
+    except Exception as error:
+
+        raise HTTPException(
+            status_code=500,
+            detail=str(error)
+        )
+
+
+    finally:
+
+        if (
+            temporary_path
+            and os.path.exists(
+                temporary_path
+            )
+        ):
+
+            os.remove(
+                temporary_path
+            )
+
+
+# ============================================================
+# VOICE / AUDIO DPR
+# ============================================================
+
+@app.post("/process-audio")
+async def process_audio(
+    file: UploadFile = File(...)
+):
+
+    original_filename = (
+        file.filename
+        or "voice_update.wav"
+    )
+
+
+    extension = (
+        Path(
+            original_filename
+        )
+        .suffix
+        .lower()
+    )
+
+
+    # --------------------------------------------------------
+    # VALIDATE AUDIO TYPE
+    # --------------------------------------------------------
+
+    if (
+        extension
+        not in SUPPORTED_AUDIO_EXTENSIONS
+    ):
+
+        raise HTTPException(
+
+            status_code=400,
+
+            detail=(
+                "Unsupported audio format. "
+                "Supported formats: "
+                "FLAC, MP3, MP4, MPEG, MPGA, "
+                "M4A, OGG, WAV and WEBM."
+            )
+        )
+
+
+    temporary_path = None
+
+
+    try:
+
+        # ----------------------------------------------------
+        # READ AUDIO
+        # ----------------------------------------------------
+
+        audio_content = (
+            await file.read()
+        )
+
+
+        if not audio_content:
+
+            raise HTTPException(
+                status_code=400,
+                detail="Uploaded audio file is empty."
+            )
+
+
+        # ----------------------------------------------------
+        # MAXIMUM SIZE
+        # ----------------------------------------------------
+
+        max_size = (
+            25
+            * 1024
+            * 1024
+        )
+
+
+        if len(
+            audio_content
+        ) > max_size:
+
+            raise HTTPException(
+
+                status_code=400,
+
+                detail=(
+                    "Audio file is too large. "
+                    "Please upload an audio file "
+                    "below 25 MB."
+                )
+            )
+
+
+        # ----------------------------------------------------
+        # TEMP AUDIO FILE
+        # ----------------------------------------------------
+
+        with tempfile.NamedTemporaryFile(
+            delete=False,
+            suffix=extension
+        ) as temporary_file:
+
+            temporary_file.write(
+                audio_content
+            )
+
+            temporary_path = (
+                temporary_file.name
+            )
+
+
+        # ----------------------------------------------------
+        # SPEECH TO TEXT
+        # ----------------------------------------------------
+
+        transcription = (
+            transcribe_audio(
+                temporary_path
+            )
+        )
+
+
+        # ----------------------------------------------------
+        # DPR EXTRACTION
+        # ----------------------------------------------------
+
+        extraction = extract_dpr(
+            transcription
+        )
+
+
+        # ----------------------------------------------------
+        # ACTIVITY MATCHING
         # ----------------------------------------------------
 
         processed_activities = (
@@ -235,14 +467,23 @@ async def process_file(
         # ----------------------------------------------------
 
         return {
-            "input_type": "file",
-            "filename": original_filename,
-            "file_type": extension,
-            "activities": processed_activities
+
+            "input_type":
+                "voice",
+
+            "filename":
+                original_filename,
+
+            "transcription":
+                transcription,
+
+            "activities":
+                processed_activities
         }
 
 
     except HTTPException:
+
         raise
 
 
@@ -255,10 +496,6 @@ async def process_file(
 
 
     finally:
-
-        # ----------------------------------------------------
-        # DELETE TEMP FILE
-        # ----------------------------------------------------
 
         if (
             temporary_path
